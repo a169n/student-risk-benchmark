@@ -1,0 +1,187 @@
+experiment:
+  experiment_id: "exp_005_public_benchmark_oulad"
+  title: "Public OULAD benchmark for lean Twin transfer"
+  schema_version: "external_oulad_adapter_v1"
+  dataset_version: "OULAD"
+  dataset_config_name: "local OULAD CSV files; DDD 2013J benchmark subset"
+  parent_experiment: "exp_004_xai_on_lean_twin"
+  status: "completed"
+
+documentation:
+  objective: >
+    Test whether the representation logic carried forward from the synthetic
+    experiments can be approximated on the Open University Learning Analytics
+    Dataset (OULAD), and whether an OULAD lean mastery analogue improves over a
+    strong OULAD LMS-style baseline.
+  hypothesis: >
+    If the lean Twin conclusion transfers directionally, then
+    `B_lms_plus_mastery_oulad` should improve over `B_lms_oulad` on leakage-safe
+    OULAD weekly snapshots. The benchmark may also weaken or complicate the
+    synthetic finding because OULAD does not expose the same topic, attendance,
+    or synthetic mastery fields.
+  limitations:
+    - >
+      This is an external public-benchmark stress test of representation logic,
+      not a comparison between synthetic and public dataset quality.
+    - >
+      The primary OULAD target is a derived weighted assessment score, not the
+      exact same construct as the synthetic `final_grade`.
+    - >
+      The selected OULAD subset is one module-presentation (`DDD`, `2013J`) to
+      match the current one-course research scope and keep model training
+      reproducible on local hardware.
+    - >
+      OULAD has no clean equivalents for attendance, synthetic weekly topics,
+      hidden trajectory parameters, risk labels, or intervention state.
+    - >
+      This benchmark can support or complicate external transfer plausibility;
+      it cannot establish full institutional external validity.
+  next_step: >
+    Use the benchmark outcome to refine the dissertation external-validity
+    discussion. If the mastery analogue helps, carry the lean Twin claim forward
+    with a public-benchmark caveat. If it does not, narrow the claim to internal
+    synthetic validity and treat mastery transfer as unresolved.
+
+oulad:
+  raw_dir: "datasets/oulad"
+  files:
+    assessments: "assessments.csv"
+    courses: "courses.csv"
+    student_info: "studentInfo.csv"
+    student_registration: "studentRegistration.csv"
+    student_vle: "studentVle.csv"
+    vle: "vle.csv"
+    student_assessment: "studentAssessment.csv"
+  processed_snapshots_csv: "data/artifacts/experiments/exp_005_public_benchmark_oulad/oulad_weekly_snapshots.csv"
+  course_filter:
+    code_module: "DDD"
+    code_presentation: "2013J"
+    rationale: >
+      Use one OULAD module-presentation to align the public benchmark with the
+      repository's current one-course synthetic scope. `DDD` `2013J` has a
+      sufficiently large cohort, dated TMA assessments, and observed exam score
+      rows, making weekly assessment-state construction more defensible than
+      presentations whose exam timing or exam score coverage is missing.
+  min_week: 4
+  max_week: null
+  student_vle_chunk_size: 500000
+  targets:
+    primary: "final_weighted_score"
+    secondary: "passed_observed"
+    excluded:
+      - "risk_level"
+    target_construction: >
+      `final_weighted_score` is derived from OULAD `assessments.weight` and
+      `studentAssessment.score` as
+      sum(score_or_zero * assessment_weight) / sum(assessment_weight) over
+      positive-weight assessments in the selected module-presentation that have
+      score records in `studentAssessment`. Missing student submissions for
+      those assessments contribute zero to the numerator. `passed_observed` is
+      derived from `studentInfo.final_result`, with Pass and Distinction mapped
+      to 1 and Fail and Withdrawn mapped to 0.
+
+feature_sets:
+  B_lms_oulad:
+    description: >
+      Strong OULAD LMS-style baseline analogue using cumulative assessment
+      performance, submission discipline, VLE activity intensity and category
+      signals, course-week progression, and registration state.
+    columns:
+      - "week_number"
+      - "course_week_progress"
+      - "is_registered_by_week"
+      - "is_unregistered_by_week"
+      - "days_since_registration_start"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+      - "cumulative_assessment_weighted_score_to_date"
+      - "cumulative_submitted_weight_to_date"
+      - "assessment_submission_rate_due_to_date"
+      - "late_submission_rate_to_date"
+      - "banked_assessment_rate_to_date"
+      - "current_week_clicks"
+      - "cumulative_clicks_to_date"
+      - "current_week_activity_types"
+      - "cumulative_assessment_clicks_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "cumulative_other_clicks_to_date"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+      - "has_weighted_score_to_date"
+      - "has_vle_activity_to_date"
+  B_lms_plus_mastery_oulad:
+    description: >
+      OULAD LMS baseline analogue plus a lean mastery-like block derived from
+      dated assessment structure: due-to-date weighted mastery, current
+      assessment-cluster mastery, assessment-type mastery aggregates, and
+      assessment-coverage context.
+    columns:
+      - "week_number"
+      - "course_week_progress"
+      - "is_registered_by_week"
+      - "is_unregistered_by_week"
+      - "days_since_registration_start"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+      - "cumulative_assessment_weighted_score_to_date"
+      - "cumulative_submitted_weight_to_date"
+      - "assessment_submission_rate_due_to_date"
+      - "late_submission_rate_to_date"
+      - "banked_assessment_rate_to_date"
+      - "current_week_clicks"
+      - "cumulative_clicks_to_date"
+      - "current_week_activity_types"
+      - "cumulative_assessment_clicks_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "cumulative_other_clicks_to_date"
+      - "overall_mastery_proxy"
+      - "current_assessment_cluster_mastery"
+      - "tma_mastery_to_date"
+      - "cma_mastery_to_date"
+      - "exam_mastery_to_date"
+      - "mastery_assessment_coverage_to_date"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+      - "has_weighted_score_to_date"
+      - "has_vle_activity_to_date"
+      - "has_current_assessment_cluster"
+      - "has_due_assessment_to_date"
+
+feature_set_order:
+  - "B_lms_oulad"
+  - "B_lms_plus_mastery_oulad"
+
+comparison:
+  baseline_feature_set: "B_lms_oulad"
+  candidate_feature_set: "B_lms_plus_mastery_oulad"
+  primary_split: "student_group"
+  improvement_rmse_tolerance: 0.05
+
+classification_models:
+  - "logistic_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+regression_models:
+  - "linear_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+splits:
+  primary: "student_group"
+  secondary: "temporal_forward"
+  student_group:
+    test_size: 0.25
+    validation_size: 0.0
+    seed: 42
+  temporal_forward:
+    train_weeks: 20
+    student_test_size: 0.25
+    student_seed: 42
+
+seed: 42
+
+outputs:
+  experiments_dir: "data/artifacts/experiments/exp_005_public_benchmark_oulad"

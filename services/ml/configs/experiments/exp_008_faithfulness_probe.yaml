@@ -1,0 +1,104 @@
+experiment:
+  experiment_id: "exp_008_faithfulness_probe"
+  title: "Controlled XAI faithfulness probe on synthetic generator oracle"
+  schema_version: "1.2"
+  dataset_version: "v1_3_refined"
+  dataset_config_name: "generator_v1_3_refined.yaml"
+  parent_experiment: "exp_007_xai_on_oulad"
+  status: "completed"
+
+documentation:
+  objective: >
+    A controlled known-ground-truth probe of whether permutation/native
+    importance recovers the generator's oracle weight ordering at the final
+    course week (week 10), and how proxy/redundancy structure shapes importance.
+    This is explicitly a methods appendix: recovering the ordering of a formula
+    we designed is a controlled instrument, not a claim about real learning.
+  hypothesis: >
+    At final course week the cumulative-to-date features approximate the
+    formula's full-course inputs. Importance should partially recover the
+    oracle ordering (avg_assignment > avg_quiz > attendance/on_time), but
+    permutation importance reflects weight x feature-spread, not weight alone,
+    so exact recovery is not guaranteed. The two equal-weighted tail features
+    (attendance_rate, on_time) are ambiguous by construction.
+  limitations:
+    - >
+      The dataset is synthetic and final_grade is a deterministic weighted mean
+      of the 4 oracle features. Importance-ordering recovery is a controlled
+      instrument for methods validation only, not a claim about real learning.
+    - >
+      Permutation importance on a small held-out set (~28 rows) has high
+      variance; the Kendall tau is indicative, not a definitive metric.
+    - >
+      SHAP is not used; this experiment uses documented sklearn permutation
+      importance fallbacks only.
+    - >
+      The proxy feature set (B_lms) includes activity_score_to_date, which
+      enters base_score via an indirect path (+0.04, submissions.py:83);
+      importance attributed to it under correlation is a structural property
+      of the data-generating process, not a calibration error.
+  next_step: >
+    Use these findings in the methods appendix to document XAI faithfulness
+    under known ground truth. Do not elevate to a headline experiment; report
+    alongside exp_004/exp_007 as methodological context.
+
+probe:
+  oracle_weights:
+    avg_assignment_score_to_date: 0.55
+    avg_quiz_score_to_date: 0.25
+    attendance_rate_to_date: 0.10
+    on_time_submission_rate_to_date: 0.10
+  oracle_features:
+    - "avg_assignment_score_to_date"
+    - "avg_quiz_score_to_date"
+    - "attendance_rate_to_date"
+    - "on_time_submission_rate_to_date"
+  proxy_feature_set: "B_lms"
+  redundancy_pairs:
+    - ["overall_mastery", "avg_assignment_score_to_date"]
+  permutation_repeats: 15
+  model: "gradient_boosting"
+  seed: 42
+  shap_enabled: false
+  final_week: null
+
+name: "exp_008_faithfulness_probe"
+seed: 42
+
+feature_sets:
+  - "B_lms"
+
+classification_models: []
+
+regression_models:
+  - "gradient_boosting"
+
+dataset:
+  snapshots_csv: "data/processed/student_twin_snapshots.csv"
+  final_results_csv: "data/raw/final_results.csv"
+  students_csv: "data/raw/students.csv"
+  courses_csv: "data/raw/courses.csv"
+
+snapshot_filter:
+  min_week: 4
+  max_week: null
+
+splits:
+  primary: "student_group"
+  secondary: null
+  student_group:
+    test_size: 0.25
+    validation_size: 0.0
+    seed: 42
+  temporal_forward:
+    train_weeks: 6
+    student_test_size: 0.25
+    student_seed: 42
+
+eda:
+  enabled: false
+  correlation_top_k: 12
+
+outputs:
+  eda_dir: "data/artifacts/experiments/exp_008_faithfulness_probe/eda"
+  experiments_dir: "data/artifacts/experiments/exp_008_faithfulness_probe"

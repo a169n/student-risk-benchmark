@@ -1,0 +1,694 @@
+{
+  "artifacts": {
+    "documentation": "docs/experiments/exp_009_oulad_ablation_bbb2013j.md",
+    "mapping_summary": "data/artifacts/experiments/exp_009_oulad_ablation_bbb2013j/public_benchmark_mapping_summary.md",
+    "processed_snapshots_csv": "data/artifacts/experiments/exp_009_oulad_ablation_bbb2013j/oulad_weekly_snapshots.csv",
+    "public_vs_synthetic_interpretation": "data/artifacts/experiments/exp_009_oulad_ablation_bbb2013j/public_vs_synthetic_interpretation.md",
+    "results_csv": "data/artifacts/experiments/exp_009_oulad_ablation_bbb2013j/exp_009_oulad_ablation_bbb2013j_results.csv",
+    "results_json": "data/artifacts/experiments/exp_009_oulad_ablation_bbb2013j/exp_009_oulad_ablation_bbb2013j_results.json",
+    "results_markdown": "data/artifacts/experiments/exp_009_oulad_ablation_bbb2013j/exp_009_oulad_ablation_bbb2013j_summary.md"
+  },
+  "config_path": "services/ml/configs/experiments/exp_009_oulad_ablation_bbb2013j.yaml",
+  "created_at": "2026-06-09T14:29:43Z",
+  "dataset": {
+    "course_filter": {
+      "code_module": "BBB",
+      "code_presentation": "2013J"
+    },
+    "course_filter_rationale": "BBB 2013J is a second, different OULAD module-presentation used to test whether the DDD 2013J mixed-to-null result from exp_006 is course-specific or replicates; it has a larger cohort (2237 students) and richer assessment structure (11 dated+scored positive-weight assessments plus exam) than DDD.\n",
+    "dataset_config_name": "local OULAD CSV files; BBB 2013J benchmark subset",
+    "dataset_version": "OULAD",
+    "processed_snapshots_path": "data/artifacts/experiments/exp_009_oulad_ablation_bbb2013j/oulad_weekly_snapshots.csv",
+    "raw_files": {
+      "assessments": "datasets/oulad/assessments.csv",
+      "courses": "datasets/oulad/courses.csv",
+      "student_assessment": "datasets/oulad/studentAssessment.csv",
+      "student_info": "datasets/oulad/studentInfo.csv",
+      "student_registration": "datasets/oulad/studentRegistration.csv",
+      "student_vle": "datasets/oulad/studentVle.csv",
+      "vle": "datasets/oulad/vle.csv"
+    },
+    "raw_row_counts": {
+      "assessments": 206,
+      "courses": 22,
+      "student_assessment": 173912,
+      "student_info": 32593,
+      "student_registration": 32593,
+      "student_vle": 10655280,
+      "vle": 6364
+    },
+    "source": "Open University Learning Analytics Dataset (OULAD)"
+  },
+  "diagnostics": {
+    "classification_best_by_feature_set": [
+      {
+        "accuracy": 0.8618067978533095,
+        "f1": 0.8660856166032648,
+        "feature_set": "A_simple_oulad",
+        "model": "gradient_boosting",
+        "roc_auc": 0.9306409207192494,
+        "split_strategy": "student_group"
+      },
+      {
+        "accuracy": 0.8790498906777977,
+        "f1": 0.8805222854898881,
+        "feature_set": "B_lms_oulad",
+        "model": "gradient_boosting",
+        "roc_auc": 0.9424119365434315,
+        "split_strategy": "student_group"
+      },
+      {
+        "accuracy": 0.8782548201152852,
+        "f1": 0.8798430603236881,
+        "feature_set": "B_lms_plus_indices_oulad",
+        "model": "gradient_boosting",
+        "roc_auc": 0.9426021572891098,
+        "split_strategy": "student_group"
+      },
+      {
+        "accuracy": 0.879646193599682,
+        "f1": 0.8805130735076467,
+        "feature_set": "B_lms_plus_mastery_oulad",
+        "model": "logistic_regression",
+        "roc_auc": 0.9448220471892651,
+        "split_strategy": "student_group"
+      },
+      {
+        "accuracy": 0.8798946531504671,
+        "f1": 0.8813276378455345,
+        "feature_set": "B_lms_plus_trends_oulad",
+        "model": "gradient_boosting",
+        "roc_auc": 0.9430818510526506,
+        "split_strategy": "student_group"
+      },
+      {
+        "accuracy": 0.879745577419996,
+        "f1": 0.8813143697891123,
+        "feature_set": "C_twin_oulad",
+        "model": "gradient_boosting",
+        "roc_auc": 0.9434900222510252,
+        "split_strategy": "student_group"
+      },
+      {
+        "accuracy": 0.8825910931174089,
+        "f1": 0.8760560580459199,
+        "feature_set": "A_simple_oulad",
+        "model": "logistic_regression",
+        "roc_auc": 0.9550392182833298,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "accuracy": 0.92759627153752,
+        "f1": 0.9282582330441272,
+        "feature_set": "B_lms_oulad",
+        "model": "logistic_regression",
+        "roc_auc": 0.9682397419749794,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "accuracy": 0.9273138122587327,
+        "f1": 0.9279850746268656,
+        "feature_set": "B_lms_plus_indices_oulad",
+        "model": "logistic_regression",
+        "roc_auc": 0.9682430088336569,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "accuracy": 0.9278787308163073,
+        "f1": 0.9285581048311882,
+        "feature_set": "B_lms_plus_mastery_oulad",
+        "model": "logistic_regression",
+        "roc_auc": 0.9694622928163553,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "accuracy": 0.9278787308163073,
+        "f1": 0.9286246738725308,
+        "feature_set": "B_lms_plus_trends_oulad",
+        "model": "logistic_regression",
+        "roc_auc": 0.9682650246203965,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "accuracy": 0.9275021184445909,
+        "f1": 0.9283320923306031,
+        "feature_set": "C_twin_oulad",
+        "model": "logistic_regression",
+        "roc_auc": 0.9695104079631811,
+        "split_strategy": "temporal_forward"
+      }
+    ],
+    "experiment_id": "exp_009_oulad_ablation_bbb2013j",
+    "fixed_model": "gradient_boosting",
+    "interpretation": {
+      "improvement_rmse_tolerance": 0.05,
+      "interpretation": "The OULAD benchmark is directionally consistent with the synthetic carry-forward decision: the lean mastery analogue improves over the OULAD LMS baseline on the primary grouped split. This supports the representation-transfer logic with caveats, not full external validity.",
+      "outcome": "supports_with_caveats",
+      "primary_delta_rmse": -0.7647974919286309,
+      "short_conclusion": "`C_twin_oulad` improved over `B_lms_oulad` on OULAD."
+    },
+    "primary_split": "temporal_forward",
+    "primary_target": "final_weighted_score",
+    "regression_best_by_feature_set": [
+      {
+        "delta_vs_baseline_rmse": -1.0264905546740266,
+        "feature_set": "B_lms_plus_mastery_oulad",
+        "mae": 3.425882608009224,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.9740594709798253,
+        "rmse": 5.2843587990142336,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": -0.7647974919286309,
+        "feature_set": "C_twin_oulad",
+        "mae": 3.6193854294399292,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.9714265891501542,
+        "rmse": 5.546051861759629,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": 0.0,
+        "feature_set": "B_lms_oulad",
+        "mae": 4.123756050184251,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.9630027146181385,
+        "rmse": 6.31084935368826,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": 0.23506954946165415,
+        "feature_set": "B_lms_plus_trends_oulad",
+        "mae": 4.320737486102416,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.9601951974297229,
+        "rmse": 6.545918903149914,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": 0.24320418266240118,
+        "feature_set": "B_lms_plus_indices_oulad",
+        "mae": 4.214590880659608,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.960096204861872,
+        "rmse": 6.554053536350661,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": 3.9186871755862747,
+        "feature_set": "A_simple_oulad",
+        "mae": 6.655822348249602,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.9027910732840162,
+        "rmse": 10.229536529274535,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": -0.08666908508989124,
+        "feature_set": "C_twin_oulad",
+        "mae": 5.604500826463626,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.8954195895775577,
+        "rmse": 10.610309550492381,
+        "split_strategy": "student_group"
+      },
+      {
+        "delta_vs_baseline_rmse": -0.07681608630954351,
+        "feature_set": "B_lms_plus_mastery_oulad",
+        "mae": 5.623383984591391,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.8952252674245098,
+        "rmse": 10.62016254927273,
+        "split_strategy": "student_group"
+      },
+      {
+        "delta_vs_baseline_rmse": -0.04736664966333848,
+        "feature_set": "B_lms_plus_indices_oulad",
+        "mae": 5.740502170259954,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.8946433865127023,
+        "rmse": 10.649611985918934,
+        "split_strategy": "student_group"
+      },
+      {
+        "delta_vs_baseline_rmse": -0.0023921043409984577,
+        "feature_set": "B_lms_plus_trends_oulad",
+        "mae": 5.757592925000249,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.8937516411367326,
+        "rmse": 10.694586531241274,
+        "split_strategy": "student_group"
+      },
+      {
+        "delta_vs_baseline_rmse": 0.0,
+        "feature_set": "B_lms_oulad",
+        "mae": 5.770313220669182,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.8937041057628435,
+        "rmse": 10.696978635582273,
+        "split_strategy": "student_group"
+      },
+      {
+        "delta_vs_baseline_rmse": 1.69000131983735,
+        "feature_set": "A_simple_oulad",
+        "mae": 7.647205875092908,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.857463824181828,
+        "rmse": 12.386979955419623,
+        "split_strategy": "student_group"
+      }
+    ],
+    "regression_fixed_model_by_feature_set": [
+      {
+        "delta_vs_baseline_rmse": -1.0264905546740266,
+        "feature_set": "B_lms_plus_mastery_oulad",
+        "mae": 3.425882608009224,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.9740594709798253,
+        "rmse": 5.2843587990142336,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": -0.7647974919286309,
+        "feature_set": "C_twin_oulad",
+        "mae": 3.6193854294399292,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.9714265891501542,
+        "rmse": 5.546051861759629,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": 0.0,
+        "feature_set": "B_lms_oulad",
+        "mae": 4.123756050184251,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.9630027146181385,
+        "rmse": 6.31084935368826,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": 0.23506954946165415,
+        "feature_set": "B_lms_plus_trends_oulad",
+        "mae": 4.320737486102416,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.9601951974297229,
+        "rmse": 6.545918903149914,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": 0.24320418266240118,
+        "feature_set": "B_lms_plus_indices_oulad",
+        "mae": 4.214590880659608,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.960096204861872,
+        "rmse": 6.554053536350661,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": 3.9186871755862747,
+        "feature_set": "A_simple_oulad",
+        "mae": 6.655822348249602,
+        "model": "gradient_boosting",
+        "n_test_rows": 10621,
+        "n_train_rows": 28526,
+        "r2": 0.9027910732840162,
+        "rmse": 10.229536529274535,
+        "split_strategy": "temporal_forward"
+      },
+      {
+        "delta_vs_baseline_rmse": -0.08666908508989124,
+        "feature_set": "C_twin_oulad",
+        "mae": 5.604500826463626,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.8954195895775577,
+        "rmse": 10.610309550492381,
+        "split_strategy": "student_group"
+      },
+      {
+        "delta_vs_baseline_rmse": -0.07681608630954351,
+        "feature_set": "B_lms_plus_mastery_oulad",
+        "mae": 5.623383984591391,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.8952252674245098,
+        "rmse": 10.62016254927273,
+        "split_strategy": "student_group"
+      },
+      {
+        "delta_vs_baseline_rmse": -0.04736664966333848,
+        "feature_set": "B_lms_plus_indices_oulad",
+        "mae": 5.740502170259954,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.8946433865127023,
+        "rmse": 10.649611985918934,
+        "split_strategy": "student_group"
+      },
+      {
+        "delta_vs_baseline_rmse": -0.0023921043409984577,
+        "feature_set": "B_lms_plus_trends_oulad",
+        "mae": 5.757592925000249,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.8937516411367326,
+        "rmse": 10.694586531241274,
+        "split_strategy": "student_group"
+      },
+      {
+        "delta_vs_baseline_rmse": 0.0,
+        "feature_set": "B_lms_oulad",
+        "mae": 5.770313220669182,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.8937041057628435,
+        "rmse": 10.696978635582273,
+        "split_strategy": "student_group"
+      },
+      {
+        "delta_vs_baseline_rmse": 1.69000131983735,
+        "feature_set": "A_simple_oulad",
+        "mae": 7.647205875092908,
+        "model": "gradient_boosting",
+        "n_test_rows": 20124,
+        "n_train_rows": 60408,
+        "r2": 0.857463824181828,
+        "rmse": 12.386979955419623,
+        "split_strategy": "student_group"
+      }
+    ],
+    "row_counts": {
+      "assessments": 12,
+      "courses": 1,
+      "snapshots": 80532,
+      "student_assessment": 14375,
+      "student_info": 2237,
+      "student_registration": 2237,
+      "student_vle": 452638,
+      "students": 2237,
+      "vle": 321
+    },
+    "secondary_target": "passed_observed",
+    "target_summary": {
+      "final_result_counts": {
+        "Distinction": 176,
+        "Fail": 521,
+        "Pass": 896,
+        "Withdrawn": 644
+      },
+      "final_weighted_score": {
+        "count": 2237,
+        "max": 96.46,
+        "mean": 41.188842199374164,
+        "median": 49.78,
+        "min": 0.0,
+        "std": 32.82903913746654
+      },
+      "n_snapshot_rows": 80532,
+      "n_student_course_presentations": 2237,
+      "n_students": 2237,
+      "passed_observed_counts": {
+        "0.0": 1165,
+        "1.0": 1072
+      },
+      "target_weight_coverage": {
+        "mean": 0.5697943674564149,
+        "median": 0.81,
+        "min": 0.0
+      },
+      "week_max": 39,
+      "week_min": 4
+    }
+  },
+  "experiment_id": "exp_009_oulad_ablation_bbb2013j",
+  "feature_sets": [
+    {
+      "columns": [
+        "week_number",
+        "cumulative_assessment_score_mean_to_date",
+        "cumulative_assessment_score_count_to_date"
+      ],
+      "description": "Minimal OULAD academic baseline: cumulative assessment score signals only.",
+      "indicator_columns": [
+        "has_assessment_score_to_date"
+      ],
+      "name": "A_simple_oulad"
+    },
+    {
+      "columns": [
+        "week_number",
+        "course_week_progress",
+        "is_registered_by_week",
+        "is_unregistered_by_week",
+        "days_since_registration_start",
+        "cumulative_assessment_score_mean_to_date",
+        "cumulative_assessment_score_count_to_date",
+        "cumulative_assessment_weighted_score_to_date",
+        "cumulative_submitted_weight_to_date",
+        "assessment_submission_rate_due_to_date",
+        "late_submission_rate_to_date",
+        "banked_assessment_rate_to_date",
+        "current_week_clicks",
+        "cumulative_clicks_to_date",
+        "current_week_activity_types",
+        "cumulative_assessment_clicks_to_date",
+        "cumulative_content_clicks_to_date",
+        "cumulative_social_clicks_to_date",
+        "cumulative_other_clicks_to_date"
+      ],
+      "description": "Strong OULAD LMS-style baseline analogue using cumulative assessment performance, submission discipline, VLE activity intensity and category signals, course-week progression, and registration state.\n",
+      "indicator_columns": [
+        "has_assessment_score_to_date",
+        "has_weighted_score_to_date",
+        "has_vle_activity_to_date"
+      ],
+      "name": "B_lms_oulad"
+    },
+    {
+      "columns": [
+        "week_number",
+        "course_week_progress",
+        "is_registered_by_week",
+        "is_unregistered_by_week",
+        "days_since_registration_start",
+        "cumulative_assessment_score_mean_to_date",
+        "cumulative_assessment_score_count_to_date",
+        "cumulative_assessment_weighted_score_to_date",
+        "cumulative_submitted_weight_to_date",
+        "assessment_submission_rate_due_to_date",
+        "late_submission_rate_to_date",
+        "banked_assessment_rate_to_date",
+        "current_week_clicks",
+        "cumulative_clicks_to_date",
+        "current_week_activity_types",
+        "cumulative_assessment_clicks_to_date",
+        "cumulative_content_clicks_to_date",
+        "cumulative_social_clicks_to_date",
+        "cumulative_other_clicks_to_date",
+        "assessment_score_trend_to_date",
+        "clicks_trend_to_date"
+      ],
+      "description": "OULAD LMS baseline plus short-horizon trend analogues (assessment-score and clicks week-over-week).",
+      "indicator_columns": [
+        "has_assessment_score_to_date",
+        "has_weighted_score_to_date",
+        "has_vle_activity_to_date"
+      ],
+      "name": "B_lms_plus_trends_oulad"
+    },
+    {
+      "columns": [
+        "week_number",
+        "course_week_progress",
+        "is_registered_by_week",
+        "is_unregistered_by_week",
+        "days_since_registration_start",
+        "cumulative_assessment_score_mean_to_date",
+        "cumulative_assessment_score_count_to_date",
+        "cumulative_assessment_weighted_score_to_date",
+        "cumulative_submitted_weight_to_date",
+        "assessment_submission_rate_due_to_date",
+        "late_submission_rate_to_date",
+        "banked_assessment_rate_to_date",
+        "current_week_clicks",
+        "cumulative_clicks_to_date",
+        "current_week_activity_types",
+        "cumulative_assessment_clicks_to_date",
+        "cumulative_content_clicks_to_date",
+        "cumulative_social_clicks_to_date",
+        "cumulative_other_clicks_to_date",
+        "overall_mastery_proxy",
+        "current_assessment_cluster_mastery",
+        "tma_mastery_to_date",
+        "cma_mastery_to_date",
+        "exam_mastery_to_date",
+        "mastery_assessment_coverage_to_date"
+      ],
+      "description": "OULAD LMS baseline analogue plus a lean mastery-like block derived from dated assessment structure: due-to-date weighted mastery, current assessment-cluster mastery, assessment-type mastery aggregates, and assessment-coverage context.\n",
+      "indicator_columns": [
+        "has_assessment_score_to_date",
+        "has_weighted_score_to_date",
+        "has_vle_activity_to_date",
+        "has_current_assessment_cluster",
+        "has_due_assessment_to_date"
+      ],
+      "name": "B_lms_plus_mastery_oulad"
+    },
+    {
+      "columns": [
+        "week_number",
+        "course_week_progress",
+        "is_registered_by_week",
+        "is_unregistered_by_week",
+        "days_since_registration_start",
+        "cumulative_assessment_score_mean_to_date",
+        "cumulative_assessment_score_count_to_date",
+        "cumulative_assessment_weighted_score_to_date",
+        "cumulative_submitted_weight_to_date",
+        "assessment_submission_rate_due_to_date",
+        "late_submission_rate_to_date",
+        "banked_assessment_rate_to_date",
+        "current_week_clicks",
+        "cumulative_clicks_to_date",
+        "current_week_activity_types",
+        "cumulative_assessment_clicks_to_date",
+        "cumulative_content_clicks_to_date",
+        "cumulative_social_clicks_to_date",
+        "cumulative_other_clicks_to_date",
+        "engagement_index_oulad",
+        "performance_index_oulad",
+        "discipline_index_oulad"
+      ],
+      "description": "OULAD LMS baseline plus composite engagement/performance/discipline indices.",
+      "indicator_columns": [
+        "has_assessment_score_to_date",
+        "has_weighted_score_to_date",
+        "has_vle_activity_to_date"
+      ],
+      "name": "B_lms_plus_indices_oulad"
+    },
+    {
+      "columns": [
+        "week_number",
+        "course_week_progress",
+        "is_registered_by_week",
+        "is_unregistered_by_week",
+        "days_since_registration_start",
+        "cumulative_assessment_score_mean_to_date",
+        "cumulative_assessment_score_count_to_date",
+        "cumulative_assessment_weighted_score_to_date",
+        "cumulative_submitted_weight_to_date",
+        "assessment_submission_rate_due_to_date",
+        "late_submission_rate_to_date",
+        "banked_assessment_rate_to_date",
+        "current_week_clicks",
+        "cumulative_clicks_to_date",
+        "current_week_activity_types",
+        "cumulative_assessment_clicks_to_date",
+        "cumulative_content_clicks_to_date",
+        "cumulative_social_clicks_to_date",
+        "cumulative_other_clicks_to_date",
+        "assessment_score_trend_to_date",
+        "clicks_trend_to_date",
+        "overall_mastery_proxy",
+        "current_assessment_cluster_mastery",
+        "tma_mastery_to_date",
+        "cma_mastery_to_date",
+        "exam_mastery_to_date",
+        "mastery_assessment_coverage_to_date",
+        "engagement_index_oulad",
+        "performance_index_oulad",
+        "discipline_index_oulad"
+      ],
+      "description": "Full OULAD twin analogue: LMS baseline + trends + mastery block + composite indices.",
+      "indicator_columns": [
+        "has_assessment_score_to_date",
+        "has_weighted_score_to_date",
+        "has_vle_activity_to_date",
+        "has_current_assessment_cluster",
+        "has_due_assessment_to_date"
+      ],
+      "name": "C_twin_oulad"
+    }
+  ],
+  "models": {
+    "classification": [
+      "logistic_regression",
+      "random_forest",
+      "gradient_boosting"
+    ],
+    "regression": [
+      "linear_regression",
+      "random_forest",
+      "gradient_boosting"
+    ]
+  },
+  "output_directory": "data/artifacts/experiments/exp_009_oulad_ablation_bbb2013j",
+  "parent_experiment": "exp_006_oulad_full_ablation",
+  "schema_version": "external_oulad_adapter_v1",
+  "seed": 42,
+  "split_strategies": {
+    "primary": "student_group",
+    "secondary": "temporal_forward",
+    "student_group": {
+      "seed": 42,
+      "test_size": 0.25,
+      "validation_size": 0.0
+    },
+    "temporal_forward": {
+      "student_seed": 42,
+      "student_test_size": 0.25,
+      "train_weeks": 20
+    }
+  },
+  "status": "completed",
+  "targets": {
+    "excluded": [
+      "risk_level"
+    ],
+    "primary": "final_weighted_score",
+    "secondary": "passed_observed",
+    "target_construction": "`final_weighted_score` is derived from OULAD `assessments.weight` and `studentAssessment.score` as sum(score_or_zero * assessment_weight) / sum(assessment_weight) over positive-weight assessments in the selected module-presentation that have score records in `studentAssessment`. Missing student submissions for those assessments contribute zero to the numerator. `passed_observed` is derived from `studentInfo.final_result`, with Pass and Distinction mapped to 1 and Fail and Withdrawn mapped to 0.\n"
+  },
+  "title": "Second-cohort full A/B/C ablation on OULAD (BBB 2013J)"
+}

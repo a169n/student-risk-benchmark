@@ -1,0 +1,215 @@
+experiment:
+  experiment_id: "exp_010_xai_on_oulad_bbb2013j"
+  title: "Second-cohort OULAD model-behavior XAI (BBB 2013J)"
+  schema_version: "external_oulad_adapter_v1"
+  dataset_version: "OULAD"
+  dataset_config_name: "local OULAD CSV files; BBB 2013J second cohort"
+  parent_experiment: "exp_009_oulad_ablation_bbb2013j"
+  status: "completed"
+
+documentation:
+  objective: >
+    Characterize which features drive the OULAD gradient-boosting regression model
+    on the BBB 2013J cohort and how concentrated the explanations are.  The primary
+    purpose is cross-course comparison with exp_007 (DDD 2013J): if explanation
+    importance structure is stable across courses, the model-behavior findings
+    generalise; if BBB shows a different pattern (particularly for mastery and
+    clickstream features, given exp_009's finding that the mastery block improves
+    temporal_forward on BBB unlike DDD), this pinpoints cohort-specific model
+    behaviour worth investigating further.
+  hypothesis: >
+    If the OULAD model on BBB 2013J is primarily driven by assessment-score features
+    (cumulative_assessment_weighted_score_to_date, overall_mastery_proxy) the
+    explanations will be highly concentrated and dominated by the partial-circular
+    target features, consistent with DDD.  However, given exp_009's result that the
+    mastery block improves temporal_forward on BBB but not DDD, we hypothesise that
+    overall_mastery_proxy and related mastery features will rank relatively higher
+    on BBB than on DDD for the temporal_forward split.  Clickstream features
+    (cumulative_*_clicks_to_date, current_week_clicks) should appear alongside
+    assessment features in B_lms_oulad; is_unregistered_by_week may appear as a
+    strong driver if BBB has a different withdrawal pattern.
+  limitations:
+    - >
+      These are model-behavior explanations under gradient_boosting; a different
+      model family may produce different importance orderings.
+    - >
+      The OULAD regression target (final_weighted_score) is partially circular on
+      assessment-score features; high importance for those features cannot be read
+      as an exogenous causal signal.
+    - >
+      Permutation importance can be unreliable when correlated features are present;
+      the mastery block features are correlated with assessment-score features, so
+      importances may understate mastery's marginal contribution.
+    - >
+      Local perturbation explanations use training-median as the reference;
+      this is not a Shapley baseline and may understate or overstate contribution
+      for skewed distributions.
+    - >
+      This experiment does not establish causal or institutional claims;
+      findings are bounded to model behavior on the BBB 2013J subset.
+    - >
+      Cross-course comparison with exp_007 (DDD 2013J) is qualitative; formal
+      statistical tests for importance-rank stability are not performed.
+  next_step: >
+    Compare the per-(feature_set, split) top-3 importance rankings and concentration
+    metrics against exp_007 (DDD 2013J).  If clickstream features rank higher on BBB
+    than DDD (especially under temporal_forward), this strengthens the claim that the
+    model captures genuine engagement signals independent of target circularity.  If
+    overall_mastery_proxy ranks higher on BBB temporal_forward (consistent with
+    exp_009's ablation result), foreground this in the dissertation XAI narrative as
+    evidence that the mastery block adds explanation value in courses where mastery
+    signal generalises temporally.
+
+oulad:
+  raw_dir: "datasets/oulad"
+  files:
+    assessments: "assessments.csv"
+    courses: "courses.csv"
+    student_info: "studentInfo.csv"
+    student_registration: "studentRegistration.csv"
+    student_vle: "studentVle.csv"
+    vle: "vle.csv"
+    student_assessment: "studentAssessment.csv"
+  snapshots_csv: "data/artifacts/experiments/exp_010_xai_on_oulad_bbb2013j/oulad_weekly_snapshots.csv"
+  course_filter:
+    code_module: "BBB"
+    code_presentation: "2013J"
+    rationale: >
+      BBB 2013J is the second cohort for cross-course explanation comparison with
+      exp_007 (DDD 2013J).  exp_009 established that the mastery block improves
+      temporal_forward performance on BBB (unlike DDD), making BBB's importance
+      structure of direct research interest.
+  min_week: 4
+  max_week: null
+  student_vle_chunk_size: 500000
+
+feature_sets:
+  B_lms_oulad:
+    description: >
+      Strong OULAD LMS-style baseline analogue using cumulative assessment
+      performance, submission discipline, VLE activity intensity and category
+      signals, course-week progression, and registration state.
+    columns:
+      - "week_number"
+      - "course_week_progress"
+      - "is_registered_by_week"
+      - "is_unregistered_by_week"
+      - "days_since_registration_start"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+      - "cumulative_assessment_weighted_score_to_date"
+      - "cumulative_submitted_weight_to_date"
+      - "assessment_submission_rate_due_to_date"
+      - "late_submission_rate_to_date"
+      - "banked_assessment_rate_to_date"
+      - "current_week_clicks"
+      - "cumulative_clicks_to_date"
+      - "current_week_activity_types"
+      - "cumulative_assessment_clicks_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "cumulative_other_clicks_to_date"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+      - "has_weighted_score_to_date"
+      - "has_vle_activity_to_date"
+
+  B_lms_plus_mastery_oulad:
+    description: >
+      OULAD LMS baseline analogue plus a lean mastery-like block derived from
+      dated assessment structure: due-to-date weighted mastery, current
+      assessment-cluster mastery, assessment-type mastery aggregates, and
+      assessment-coverage context.
+    columns:
+      - "week_number"
+      - "course_week_progress"
+      - "is_registered_by_week"
+      - "is_unregistered_by_week"
+      - "days_since_registration_start"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+      - "cumulative_assessment_weighted_score_to_date"
+      - "cumulative_submitted_weight_to_date"
+      - "assessment_submission_rate_due_to_date"
+      - "late_submission_rate_to_date"
+      - "banked_assessment_rate_to_date"
+      - "current_week_clicks"
+      - "cumulative_clicks_to_date"
+      - "current_week_activity_types"
+      - "cumulative_assessment_clicks_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "cumulative_other_clicks_to_date"
+      - "overall_mastery_proxy"
+      - "current_assessment_cluster_mastery"
+      - "tma_mastery_to_date"
+      - "cma_mastery_to_date"
+      - "exam_mastery_to_date"
+      - "mastery_assessment_coverage_to_date"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+      - "has_weighted_score_to_date"
+      - "has_vle_activity_to_date"
+      - "has_current_assessment_cluster"
+      - "has_due_assessment_to_date"
+
+  C_twin_oulad:
+    description: "Full OULAD twin analogue: LMS baseline + trends + mastery block + composite indices."
+    columns:
+      - "week_number"
+      - "course_week_progress"
+      - "is_registered_by_week"
+      - "is_unregistered_by_week"
+      - "days_since_registration_start"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+      - "cumulative_assessment_weighted_score_to_date"
+      - "cumulative_submitted_weight_to_date"
+      - "assessment_submission_rate_due_to_date"
+      - "late_submission_rate_to_date"
+      - "banked_assessment_rate_to_date"
+      - "current_week_clicks"
+      - "cumulative_clicks_to_date"
+      - "current_week_activity_types"
+      - "cumulative_assessment_clicks_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "cumulative_other_clicks_to_date"
+      - "assessment_score_trend_to_date"
+      - "clicks_trend_to_date"
+      - "overall_mastery_proxy"
+      - "current_assessment_cluster_mastery"
+      - "tma_mastery_to_date"
+      - "cma_mastery_to_date"
+      - "exam_mastery_to_date"
+      - "mastery_assessment_coverage_to_date"
+      - "engagement_index_oulad"
+      - "performance_index_oulad"
+      - "discipline_index_oulad"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+      - "has_weighted_score_to_date"
+      - "has_vle_activity_to_date"
+      - "has_current_assessment_cluster"
+      - "has_due_assessment_to_date"
+
+feature_set_order:
+  - "B_lms_oulad"
+  - "B_lms_plus_mastery_oulad"
+  - "C_twin_oulad"
+
+splits:
+  student_group:
+    test_size: 0.25
+    seed: 42
+  temporal_forward:
+    train_weeks: 20
+    student_test_size: 0.25
+    student_seed: 42
+
+model: "gradient_boosting"
+permutation_repeats: 15
+seed: 42
+
+outputs:
+  experiments_dir: "data/artifacts/experiments/exp_010_xai_on_oulad_bbb2013j"

@@ -1,0 +1,47 @@
+name: "baseline_v1"
+seed: 42
+
+feature_sets:
+  - "A_simple"
+  - "B_lms"
+  - "C_twin"
+
+classification_models:
+  - "logistic_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+regression_models:
+  - "linear_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+dataset:
+  snapshots_csv: "data/processed/student_twin_snapshots.csv"
+  final_results_csv: "data/raw/final_results.csv"
+  students_csv: "data/raw/students.csv"
+  courses_csv: "data/raw/courses.csv"
+
+snapshot_filter:
+  min_week: 4
+  max_week: null
+
+splits:
+  primary: "student_group"
+  secondary: "temporal_forward"
+  student_group:
+    test_size: 0.25
+    validation_size: 0.0
+    seed: 42
+  temporal_forward:
+    train_weeks: 6
+    student_test_size: 0.25
+    student_seed: 42
+
+eda:
+  enabled: true
+  correlation_top_k: 12
+
+outputs:
+  eda_dir: "data/artifacts/eda"
+  experiments_dir: "data/artifacts/experiments/baselines"

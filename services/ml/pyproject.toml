@@ -1,0 +1,39 @@
+[project]
+name = "sdtxai-ml"
+version = "0.1.0"
+description = "ML scaffold for student digital twin xai prototype"
+requires-python = ">=3.11"
+dependencies = [
+  "pydantic>=2.8.0",
+  "pydantic-settings>=2.4.0",
+  "pyyaml>=6.0.2",
+  "numpy>=2.1.0",
+  "pandas>=2.2.2",
+  "pyarrow>=17.0.0",
+  "scikit-learn>=1.5.0",
+  "scipy>=1.10.0",
+  "openpyxl>=3.1.5",
+  "shap>=0.51.0",
+]
+
+[dependency-groups]
+dev = [
+  "ruff>=0.5.7",
+  "pytest>=8.3.0",
+  "matplotlib>=3.11.1",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# EDA / evaluation reporting modules build markdown tables whose template
+# strings are inherently wide. Test fixtures that synthesize per-snapshot rows
+# also unavoidably exceed 100 columns when each field is on its own line.
+"src/experiments/eda.py" = ["E501"]
+"src/experiments/evaluate.py" = ["E501"]
+"tests/test_run_baselines.py" = ["E501"]

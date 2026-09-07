@@ -1,0 +1,312 @@
+experiment:
+  experiment_id: "exp_009_oulad_ablation_bbb2013j"
+  title: "Second-cohort full A/B/C ablation on OULAD (BBB 2013J)"
+  schema_version: "external_oulad_adapter_v1"
+  dataset_version: "OULAD"
+  dataset_config_name: "local OULAD CSV files; BBB 2013J benchmark subset"
+  parent_experiment: "exp_006_oulad_full_ablation"
+  status: "completed"
+
+documentation:
+  objective: >
+    Replication test of the exp_006 full nested A/B/C ablation on a second,
+    different OULAD module-presentation (BBB 2013J) to determine whether the
+    mixed-to-null finding from DDD 2013J — no twin feature block beats the
+    LMS baseline by >1.0 RMSE on either split under a fixed model family —
+    is course-specific or replicates across courses. BBB 2013J is a richer
+    presentation with 2237 students and 11 dated+scored positive-weight
+    assessments plus an exam, providing a stronger stress-test.
+  hypothesis: >
+    If the mixed-to-null result from exp_006 is robust and not an artefact of
+    DDD 2013J course structure, the same pattern should replicate on BBB 2013J:
+    no twin feature block (trends, mastery, indices, C_twin) should beat
+    B_lms_oulad by >1.0 RMSE on either split under the fixed gradient_boosting
+    model. If the result is course-specific, at least one twin block should
+    show a clear improvement on BBB 2013J. A replication of the null is the
+    expected and scientifically informative outcome.
+  limitations:
+    - >
+      This experiment isolates the marginal contribution of each twin feature
+      block on a public dataset; it is not a comparison of synthetic versus
+      public dataset quality.
+    - >
+      The primary OULAD target is a derived weighted assessment score, not the
+      exact same construct as the synthetic `final_grade`.
+    - >
+      The selected OULAD subset is one module-presentation (`BBB`, `2013J`) to
+      match the current one-course research scope and keep model training
+      reproducible on local hardware.
+    - >
+      OULAD has no clean equivalents for attendance, synthetic weekly topics,
+      hidden trajectory parameters, risk labels, or intervention state.
+    - >
+      This benchmark can support or complicate external transfer plausibility;
+      it cannot establish full institutional external validity.
+    - >
+      The OULAD regression target (final_weighted_score) is partially circular
+      on assessment-score features (cumulative_assessment_weighted_score_to_date
+      feeds the target); interpretation leans on exogenous clickstream features
+      and the classification target.
+  next_step: >
+    Compare the BBB 2013J fixed-model regression table against the DDD 2013J
+    results from exp_006. If the mixed-to-null replicates, strengthen the
+    dissertation claim that twin blocks do not transfer to OULAD across courses
+    and report a cross-course null. If the result diverges, investigate which
+    structural differences between BBB and DDD (assessment density, VLE
+    activity patterns, cohort size) might explain the divergence.
+
+oulad:
+  raw_dir: "datasets/oulad"
+  files:
+    assessments: "assessments.csv"
+    courses: "courses.csv"
+    student_info: "studentInfo.csv"
+    student_registration: "studentRegistration.csv"
+    student_vle: "studentVle.csv"
+    vle: "vle.csv"
+    student_assessment: "studentAssessment.csv"
+  processed_snapshots_csv: "data/artifacts/experiments/exp_009_oulad_ablation_bbb2013j/oulad_weekly_snapshots.csv"
+  course_filter:
+    code_module: "BBB"
+    code_presentation: "2013J"
+    rationale: >
+      BBB 2013J is a second, different OULAD module-presentation used to test
+      whether the DDD 2013J mixed-to-null result from exp_006 is course-specific
+      or replicates; it has a larger cohort (2237 students) and richer assessment
+      structure (11 dated+scored positive-weight assessments plus exam) than DDD.
+  min_week: 4
+  max_week: null
+  student_vle_chunk_size: 500000
+  targets:
+    primary: "final_weighted_score"
+    secondary: "passed_observed"
+    excluded:
+      - "risk_level"
+    target_construction: >
+      `final_weighted_score` is derived from OULAD `assessments.weight` and
+      `studentAssessment.score` as
+      sum(score_or_zero * assessment_weight) / sum(assessment_weight) over
+      positive-weight assessments in the selected module-presentation that have
+      score records in `studentAssessment`. Missing student submissions for
+      those assessments contribute zero to the numerator. `passed_observed` is
+      derived from `studentInfo.final_result`, with Pass and Distinction mapped
+      to 1 and Fail and Withdrawn mapped to 0.
+
+feature_sets:
+  A_simple_oulad:
+    description: "Minimal OULAD academic baseline: cumulative assessment score signals only."
+    columns:
+      - "week_number"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+
+  B_lms_oulad:
+    description: >
+      Strong OULAD LMS-style baseline analogue using cumulative assessment
+      performance, submission discipline, VLE activity intensity and category
+      signals, course-week progression, and registration state.
+    columns:
+      - "week_number"
+      - "course_week_progress"
+      - "is_registered_by_week"
+      - "is_unregistered_by_week"
+      - "days_since_registration_start"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+      - "cumulative_assessment_weighted_score_to_date"
+      - "cumulative_submitted_weight_to_date"
+      - "assessment_submission_rate_due_to_date"
+      - "late_submission_rate_to_date"
+      - "banked_assessment_rate_to_date"
+      - "current_week_clicks"
+      - "cumulative_clicks_to_date"
+      - "current_week_activity_types"
+      - "cumulative_assessment_clicks_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "cumulative_other_clicks_to_date"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+      - "has_weighted_score_to_date"
+      - "has_vle_activity_to_date"
+
+  B_lms_plus_trends_oulad:
+    description: "OULAD LMS baseline plus short-horizon trend analogues (assessment-score and clicks week-over-week)."
+    columns:
+      - "week_number"
+      - "course_week_progress"
+      - "is_registered_by_week"
+      - "is_unregistered_by_week"
+      - "days_since_registration_start"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+      - "cumulative_assessment_weighted_score_to_date"
+      - "cumulative_submitted_weight_to_date"
+      - "assessment_submission_rate_due_to_date"
+      - "late_submission_rate_to_date"
+      - "banked_assessment_rate_to_date"
+      - "current_week_clicks"
+      - "cumulative_clicks_to_date"
+      - "current_week_activity_types"
+      - "cumulative_assessment_clicks_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "cumulative_other_clicks_to_date"
+      - "assessment_score_trend_to_date"
+      - "clicks_trend_to_date"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+      - "has_weighted_score_to_date"
+      - "has_vle_activity_to_date"
+
+  B_lms_plus_mastery_oulad:
+    description: >
+      OULAD LMS baseline analogue plus a lean mastery-like block derived from
+      dated assessment structure: due-to-date weighted mastery, current
+      assessment-cluster mastery, assessment-type mastery aggregates, and
+      assessment-coverage context.
+    columns:
+      - "week_number"
+      - "course_week_progress"
+      - "is_registered_by_week"
+      - "is_unregistered_by_week"
+      - "days_since_registration_start"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+      - "cumulative_assessment_weighted_score_to_date"
+      - "cumulative_submitted_weight_to_date"
+      - "assessment_submission_rate_due_to_date"
+      - "late_submission_rate_to_date"
+      - "banked_assessment_rate_to_date"
+      - "current_week_clicks"
+      - "cumulative_clicks_to_date"
+      - "current_week_activity_types"
+      - "cumulative_assessment_clicks_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "cumulative_other_clicks_to_date"
+      - "overall_mastery_proxy"
+      - "current_assessment_cluster_mastery"
+      - "tma_mastery_to_date"
+      - "cma_mastery_to_date"
+      - "exam_mastery_to_date"
+      - "mastery_assessment_coverage_to_date"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+      - "has_weighted_score_to_date"
+      - "has_vle_activity_to_date"
+      - "has_current_assessment_cluster"
+      - "has_due_assessment_to_date"
+
+  B_lms_plus_indices_oulad:
+    description: "OULAD LMS baseline plus composite engagement/performance/discipline indices."
+    columns:
+      - "week_number"
+      - "course_week_progress"
+      - "is_registered_by_week"
+      - "is_unregistered_by_week"
+      - "days_since_registration_start"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+      - "cumulative_assessment_weighted_score_to_date"
+      - "cumulative_submitted_weight_to_date"
+      - "assessment_submission_rate_due_to_date"
+      - "late_submission_rate_to_date"
+      - "banked_assessment_rate_to_date"
+      - "current_week_clicks"
+      - "cumulative_clicks_to_date"
+      - "current_week_activity_types"
+      - "cumulative_assessment_clicks_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "cumulative_other_clicks_to_date"
+      - "engagement_index_oulad"
+      - "performance_index_oulad"
+      - "discipline_index_oulad"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+      - "has_weighted_score_to_date"
+      - "has_vle_activity_to_date"
+
+  C_twin_oulad:
+    description: "Full OULAD twin analogue: LMS baseline + trends + mastery block + composite indices."
+    columns:
+      - "week_number"
+      - "course_week_progress"
+      - "is_registered_by_week"
+      - "is_unregistered_by_week"
+      - "days_since_registration_start"
+      - "cumulative_assessment_score_mean_to_date"
+      - "cumulative_assessment_score_count_to_date"
+      - "cumulative_assessment_weighted_score_to_date"
+      - "cumulative_submitted_weight_to_date"
+      - "assessment_submission_rate_due_to_date"
+      - "late_submission_rate_to_date"
+      - "banked_assessment_rate_to_date"
+      - "current_week_clicks"
+      - "cumulative_clicks_to_date"
+      - "current_week_activity_types"
+      - "cumulative_assessment_clicks_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "cumulative_other_clicks_to_date"
+      - "assessment_score_trend_to_date"
+      - "clicks_trend_to_date"
+      - "overall_mastery_proxy"
+      - "current_assessment_cluster_mastery"
+      - "tma_mastery_to_date"
+      - "cma_mastery_to_date"
+      - "exam_mastery_to_date"
+      - "mastery_assessment_coverage_to_date"
+      - "engagement_index_oulad"
+      - "performance_index_oulad"
+      - "discipline_index_oulad"
+    indicator_columns:
+      - "has_assessment_score_to_date"
+      - "has_weighted_score_to_date"
+      - "has_vle_activity_to_date"
+      - "has_current_assessment_cluster"
+      - "has_due_assessment_to_date"
+
+feature_set_order:
+  - "A_simple_oulad"
+  - "B_lms_oulad"
+  - "B_lms_plus_trends_oulad"
+  - "B_lms_plus_mastery_oulad"
+  - "B_lms_plus_indices_oulad"
+  - "C_twin_oulad"
+
+comparison:
+  baseline_feature_set: "B_lms_oulad"
+  candidate_feature_set: "C_twin_oulad"
+  primary_split: "temporal_forward"
+  improvement_rmse_tolerance: 0.05
+
+classification_models:
+  - "logistic_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+regression_models:
+  - "linear_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+splits:
+  primary: "student_group"
+  secondary: "temporal_forward"
+  student_group:
+    test_size: 0.25
+    validation_size: 0.0
+    seed: 42
+  temporal_forward:
+    train_weeks: 20
+    student_test_size: 0.25
+    student_seed: 42
+
+seed: 42
+
+outputs:
+  experiments_dir: "data/artifacts/experiments/exp_009_oulad_ablation_bbb2013j"

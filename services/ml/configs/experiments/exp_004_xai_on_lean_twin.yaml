@@ -1,0 +1,117 @@
+experiment:
+  experiment_id: "exp_004_xai_on_lean_twin"
+  title: "XAI on lean Twin"
+  schema_version: "1.2"
+  dataset_version: "v1_3_refined"
+  dataset_config_name: "generator_v1_3_refined.yaml"
+  parent_experiment: "exp_003_mastery_validation"
+  status: "completed"
+
+documentation:
+  objective: >
+    Explain the validated lean Twin candidate, `B_lms_plus_mastery`, and decide
+    whether its predictive behavior is interpretable and teacher-meaningful or
+    whether the model collapses into one dominating mastery feature.
+  hypothesis: >
+    The lean Twin candidate should keep the predictive improvement observed in
+    mastery validation while producing explanations that combine LMS behavior,
+    performance, and mastery signals. `overall_mastery` is expected to be
+    important and redundant, but it should not suppress all other explanation
+    factors.
+  limitations:
+    - >
+      The dataset is synthetic, so explanations reflect the current generator
+      assumptions and cannot be interpreted as evidence of real-world causal
+      mechanisms.
+    - >
+      `overall_mastery` is known from `exp_003_mastery_validation` to be highly
+      redundant with LMS score aggregates; this experiment audits that risk
+      rather than treating mastery as an independent construct.
+    - >
+      SHAP is not used because it is not part of the current project dependency
+      contract. The experiment uses documented sklearn permutation importance
+      and local perturbation fallbacks instead.
+    - >
+      Local explanations are compact representative snapshots selected by
+      deterministic rules; they are not a full qualitative case study of every
+      student trajectory.
+  next_step: >
+    If explanations remain teacher-meaningful with acceptable mastery
+    dominance, carry `B_lms_plus_mastery` into the dissertation XAI narrative.
+    If `overall_mastery` dominates, narrow the lean Twin representation before
+    building scenario-analysis logic.
+
+xai:
+  primary_split: "student_group"
+  model: "gradient_boosting"
+  reference_baseline_feature_set: "B_lms"
+  lean_twin_feature_set: "B_lms_plus_mastery"
+  primary_target: "final_grade"
+  secondary_context_target: "passed"
+  mastery_columns:
+    - "current_topic_mastery"
+    - "overall_mastery"
+  permutation_repeats: 15
+  top_k_global: 12
+  top_k_local: 6
+  shap_enabled: false
+  shap_fallback_reason: >
+    SHAP is not part of the current project dependency contract; use documented
+    sklearn permutation and local perturbation fallbacks.
+  local_cases:
+    max_cases: 5
+    case_types:
+      - "strong_performer"
+      - "at_risk"
+      - "improving_trajectory"
+      - "declining_trajectory"
+      - "borderline_medium"
+    borderline_grade: 50.0
+    trend_feature: "score_trend_3w"
+  dominance:
+    overall_mastery_share_warn: 0.45
+    explanation_top1_share_warn: 0.55
+    local_mastery_share_warn: 0.60
+    drop_rmse_warn: 0.25
+
+name: "exp_004_xai_on_lean_twin"
+seed: 42
+
+feature_sets:
+  - "B_lms"
+  - "B_lms_plus_mastery"
+
+classification_models: []
+
+regression_models:
+  - "gradient_boosting"
+
+dataset:
+  snapshots_csv: "data/processed/student_twin_snapshots.csv"
+  final_results_csv: "data/raw/final_results.csv"
+  students_csv: "data/raw/students.csv"
+  courses_csv: "data/raw/courses.csv"
+
+snapshot_filter:
+  min_week: 4
+  max_week: null
+
+splits:
+  primary: "student_group"
+  secondary: null
+  student_group:
+    test_size: 0.25
+    validation_size: 0.0
+    seed: 42
+  temporal_forward:
+    train_weeks: 6
+    student_test_size: 0.25
+    student_seed: 42
+
+eda:
+  enabled: false
+  correlation_top_k: 12
+
+outputs:
+  eda_dir: "data/artifacts/experiments/exp_004_xai_on_lean_twin/eda"
+  experiments_dir: "data/artifacts/experiments/exp_004_xai_on_lean_twin"

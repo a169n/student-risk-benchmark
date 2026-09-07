@@ -1,0 +1,25 @@
+# Datasets are downloaded, never committed. See datasets/PROVENANCE.md.
+datasets/*
+!datasets/PROVENANCE.md
+
+# Per-student intermediates rebuilt by the adapters, 15-24 MB each.
+data/artifacts/experiments/*/oulad_weekly_snapshots.csv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# LaTeX build products
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+
+.DS_Store

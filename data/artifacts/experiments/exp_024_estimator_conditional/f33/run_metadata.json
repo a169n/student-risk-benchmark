@@ -1,0 +1,13 @@
+{
+  "experiment_id": "exp_024_estimator_conditional",
+  "fraction": 0.33,
+  "seeds": 3,
+  "n_pairs_per_estimator": 78,
+  "estimators": [
+    "shap",
+    "permutation",
+    "drop_column"
+  ],
+  "spread_between_reliable_estimators": 0.25234025234025237,
+  "note": "drop_column is degenerate on this collinear feature set (exp_022)"
+}

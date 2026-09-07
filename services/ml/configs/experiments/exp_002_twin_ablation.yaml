@@ -1,0 +1,90 @@
+experiment:
+  experiment_id: "exp_002_twin_ablation"
+  title: "Twin subgroup ablation"
+  schema_version: "1.2"
+  dataset_version: "v1_3_refined"
+  dataset_config_name: "generator_v1_3_refined.yaml"
+  parent_experiment: "exp_001_baseline"
+  status: "completed"
+
+documentation:
+  objective: >
+    Test which Digital Twin feature subgroups add predictive value beyond the
+    `B_lms` baseline for the primary `final_grade` regression target.
+  hypothesis: >
+    The full Twin feature set is expected to be partly redundant because the
+    baseline experiment showed that `C_twin` did not reliably outperform
+    `B_lms`; a smaller subset may retain any useful Twin signal with less
+    collinearity.
+  limitations:
+    - >
+      The experiment uses the current synthetic refined dataset only; results
+      should not be interpreted as validated institutional findings.
+    - >
+      The ablation tests grouped feature blocks, not every individual feature,
+      to keep the comparison interpretable.
+    - >
+      `passed` is reported only as secondary context because it is very easy on
+      the current generated data.
+  next_step: >
+    Carry the selected lean feature set into the future explanation phase only
+    after reviewing redundancy and deciding whether the generator needs further
+    realism calibration.
+
+recommendation:
+  primary_split: "student_group"
+  baseline_feature_set: "B_lms"
+  full_feature_set: "C_twin_full"
+  lean_rmse_tolerance: 0.05
+
+name: "exp_002_twin_ablation"
+seed: 42
+
+feature_sets:
+  - "B_lms"
+  - "B_lms_plus_trends"
+  - "B_lms_plus_mastery"
+  - "B_lms_plus_indices"
+  - "B_lms_plus_temporal"
+  - "B_lms_plus_trends_mastery"
+  - "C_twin_full"
+
+classification_models:
+  - "logistic_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+regression_models:
+  - "linear_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+dataset:
+  snapshots_csv: "data/processed/student_twin_snapshots.csv"
+  final_results_csv: "data/raw/final_results.csv"
+  students_csv: "data/raw/students.csv"
+  courses_csv: "data/raw/courses.csv"
+
+snapshot_filter:
+  min_week: 4
+  max_week: null
+
+splits:
+  primary: "student_group"
+  secondary: "temporal_forward"
+  student_group:
+    test_size: 0.25
+    validation_size: 0.0
+    seed: 42
+  temporal_forward:
+    train_weeks: 6
+    student_test_size: 0.25
+    student_seed: 42
+
+eda:
+  enabled: false
+  correlation_top_k: 12
+
+outputs:
+  eda_dir: "data/artifacts/experiments/exp_002_twin_ablation/eda"
+  experiments_dir: "data/artifacts/experiments/exp_002_twin_ablation"

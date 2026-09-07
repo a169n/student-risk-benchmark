@@ -1,0 +1,40 @@
+schema_version: "1.2"
+trajectory_tuning: "v1_2_baseline"
+num_students: 120
+num_weeks: 10
+num_groups: 3
+assignments_per_week: 2
+sessions_per_week: 2
+seed: 42
+pass_mark: 50
+withdrawal_rate: 0.05
+start_date: "2026-09-01"
+
+course:
+  course_id: "course_prog_101"
+  course_code: "CS101"
+  course_name: "Introduction to Programming"
+  term_label: "Fall 2026"
+  course_description: "Synthetic introductory programming course for Student Digital Twin research."
+  topic_titles:
+    - "Programming Foundations and Tooling"
+    - "Variables, Types, and Expressions"
+    - "Conditionals and Boolean Logic"
+    - "Loops and Iteration"
+    - "Functions and Modular Thinking"
+    - "Collections and Nested Data"
+    - "File Handling and Exceptions"
+    - "Object-Oriented Basics"
+    - "Algorithmic Practice and Debugging"
+    - "Review, Integration, and Final Project Prep"
+
+outputs:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  artifacts_dir: "data/artifacts"
+
+trajectory_weights:
+  stable_high: 0.26
+  improving: 0.22
+  declining: 0.22
+  consistently_at_risk: 0.30

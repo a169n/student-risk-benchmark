@@ -1,0 +1,31 @@
+{
+  "experiment_id": "exp_014_transfer_ladder",
+  "fraction": 0.33,
+  "min_students": 50,
+  "min_minority": 15,
+  "seed": 42,
+  "n_cohorts": 30,
+  "institutions": [
+    "KU Leuven",
+    "OULAD",
+    "UKZN"
+  ],
+  "features": [
+    "cum_clicks",
+    "cum_active_days",
+    "cum_content_clicks",
+    "cum_social",
+    "cur_clicks",
+    "active_weeks",
+    "weeks_since_active"
+  ],
+  "representations": [
+    "raw",
+    "zscore",
+    "percentile"
+  ],
+  "models": [
+    "gradient_boosting",
+    "logistic_regression"
+  ]
+}

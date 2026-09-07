@@ -1,0 +1,79 @@
+{
+  "artifact_type": "student_clustered_bootstrap_ci",
+  "source_experiment": "exp_009_oulad_ablation_bbb2013j",
+  "cohort": "OULAD BBB 2013J",
+  "model": "gradient_boosting",
+  "baseline_feature_set": "B_lms_oulad",
+  "candidate_feature_set": "B_lms_plus_mastery_oulad",
+  "bootstrap_resamples": 5000,
+  "bootstrap_unit": "held-out test student (cluster)",
+  "seed": 42,
+  "environment": {
+    "python": "3.14.3",
+    "sklearn": "1.9.0",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "note": "NON-DESTRUCTIVE: recomputed via the frozen pipeline; does not overwrite exp_009 result files. The temporal_forward cell is an out-of-time extrapolation whose exact RMSE magnitude is environment-sensitive, so reproduced point estimates may differ from the stored ones; the bootstrap CIs apply to the reproduced (this-environment) estimates.",
+  "splits": [
+    {
+      "split": "temporal_forward",
+      "n_test_rows": 10621,
+      "reproduced": {
+        "rmse_baseline": 7.6752117893666005,
+        "rmse_candidate": 5.5147607631466675,
+        "delta_candidate_minus_baseline": -2.160451026219933
+      },
+      "stored": {
+        "rmse_baseline": 6.31084935368826,
+        "rmse_candidate": 5.2843587990142336,
+        "delta_candidate_minus_baseline": -1.0264905546740266
+      },
+      "student_clustered_bootstrap": {
+        "rmse_baseline_ci95": [
+          7.177029931947909,
+          8.187880080656884
+        ],
+        "rmse_candidate_ci95": [
+          5.189126816055178,
+          5.834458421257538
+        ],
+        "delta_candidate_minus_baseline_ci95": [
+          -2.535314298516051,
+          -1.801138102697139
+        ],
+        "p_delta_ge_0_one_sided": 0.0,
+        "n_students": 559
+      }
+    },
+    {
+      "split": "student_group",
+      "n_test_rows": 20124,
+      "reproduced": {
+        "rmse_baseline": 10.874915635476418,
+        "rmse_candidate": 10.803110470298845,
+        "delta_candidate_minus_baseline": -0.0718051651775724
+      },
+      "stored": {
+        "rmse_baseline": 10.696978635582273,
+        "rmse_candidate": 10.62016254927273,
+        "delta_candidate_minus_baseline": -0.07681608630954351
+      },
+      "student_clustered_bootstrap": {
+        "rmse_baseline_ci95": [
+          10.260696092974403,
+          11.489175898508874
+        ],
+        "rmse_candidate_ci95": [
+          10.196544957039857,
+          11.412763599109487
+        ],
+        "delta_candidate_minus_baseline_ci95": [
+          -0.16807915113866329,
+          0.02891223797219011
+        ],
+        "p_delta_ge_0_one_sided": 0.0822,
+        "n_students": 559
+      }
+    }
+  ]
+}

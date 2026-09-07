@@ -1,0 +1,142 @@
+experiment_id: "exp_012_oulad_engagement_bbb2013j"
+title: "Matched engagement-only PASSED classification on OULAD (BBB 2013J)"
+schema_version: "external_oulad_adapter_v1"
+dataset_version: "OULAD"
+dataset_config_name: "local OULAD CSV files; BBB 2013J engagement-only subset"
+parent_experiment: "exp_011_kuleuven_engagement"
+status: "completed"
+
+documentation:
+  objective: >
+    Run the engagement-only PASSED classification benchmark on OULAD (BBB 2013J)
+    under a design MATCHED to the KU Leuven engagement benchmark (exp_011), so the
+    two institutions can be compared head-to-head. Only binary PASSED
+    classification is reported; OULAD's assessment-derived score is deliberately
+    NOT used. Permutation importance identifies WHICH engagement features drive
+    PASSED prediction so the cross-institution importance RANKS can be compared.
+    final_grade is set to float(passed) purely as a structural placeholder for the
+    shared pipeline; no real grade is used and no regression metric is reported.
+  hypothesis: >
+    Richer engagement features (B_engagement_oulad: multi-dimensional click
+    behaviour, content-type ratios, social/forum clicks, temporal progress) are
+    expected to be NEUTRAL — at most a small, non-decisive change in PASSED F1 and
+    ROC-AUC — over the minimal two-feature baseline (A_simple_engagement_oulad:
+    cumulative clicks + active days only) on both split strategies, mirroring the
+    KU Leuven finding. The simple baseline already captures the dominant
+    engagement signal, so a large gain is not expected.
+  limitations:
+    - >
+      Dataset citation: Kuzilek, J., Hlosta, M., & Zdrahal, Z. (2017). Open
+      University Learning Analytics dataset. Scientific Data, 4, 170171.
+      https://doi.org/10.1038/sdata.2017.171
+    - >
+      OULAD VLE interaction logs are aggregated at DAILY granularity, so
+      session-level engagement features (session counts, average session clicks)
+      that exist on KU Leuven CANNOT be reconstructed here. The matched OULAD
+      feature set therefore omits session features by necessity, not by choice.
+    - >
+      cumulative_social_clicks_to_date (forum/social CLICKS) is the OULAD analog
+      of KU Leuven forum POSTS. These are different units, so the
+      cross-institution comparison relies on permutation-importance RANKS, not on
+      raw importance magnitudes.
+    - >
+      final_grade is set to float(passed) purely as a structural placeholder for
+      the shared pipeline. Any regression metric on this column is meaningless and
+      is NOT reported. This is an engagement-only matched design: assessment-score
+      and mastery feature blocks from exp_006/exp_009 are intentionally excluded.
+    - >
+      The binary PASSED label encodes course-level outcome, not weekly learning
+      progress; all weekly rows for a student share the same label, which makes
+      classification somewhat easier than continuous grade prediction.
+    - >
+      Permutation importance is computed with n_repeats=15 on the held-out test
+      set; feature correlations can suppress individual importances.
+    - >
+      The selected OULAD subset is a single module-presentation (BBB 2013J); this
+      benchmark cannot establish institutional deployment readiness and is a
+      cross-institution engagement-transfer stress test only.
+  next_step: >
+    Feed these BBB 2013J engagement-importance results, together with the DDD
+    2013J OULAD run and the KU Leuven exp_011 run, into
+    analyze_cross_institution_engagement to compare the B-vs-A engagement deltas
+    and the permutation-importance RANKS across all three cohorts. Stable top
+    drivers of PASSED prediction across institutions strengthen the
+    engagement-representation-transfer argument; a consistent null is reported
+    honestly as a cross-institution robustness check.
+
+oulad:
+  raw_dir: "datasets/oulad"
+  files:
+    assessments: "assessments.csv"
+    courses: "courses.csv"
+    student_info: "studentInfo.csv"
+    student_registration: "studentRegistration.csv"
+    student_vle: "studentVle.csv"
+    vle: "vle.csv"
+    student_assessment: "studentAssessment.csv"
+  course_filter:
+    code_module: "BBB"
+    code_presentation: "2013J"
+  min_week: 4
+  max_week: null
+
+feature_sets:
+  A_simple_engagement_oulad:
+    description: >
+      Minimal OULAD engagement baseline matched to KU Leuven A_simple_engagement:
+      cumulative click volume and cumulative active days only. Has-VLE-activity
+      indicator added for leakage-safe missingness handling.
+    columns:
+      - "cumulative_clicks_to_date"
+      - "cumulative_active_days_to_date"
+    indicator_columns:
+      - "has_vle_activity_to_date"
+
+  B_engagement_oulad:
+    description: >
+      Rich OULAD engagement feature set matched to KU Leuven B_engagement: total
+      click volume, active days, current-week clicks, content-type click split
+      (content vs social/forum), content focus ratio, and the raw week counter.
+      Session features are omitted because OULAD VLE logs are daily, not
+      session-resolved. cumulative_social_clicks_to_date is the OULAD analog of
+      KU Leuven forum posts. This is the candidate feature set characterising
+      WHICH engagement dimensions drive PASSED prediction.
+    columns:
+      - "cumulative_clicks_to_date"
+      - "cumulative_active_days_to_date"
+      - "current_week_clicks"
+      - "cumulative_content_clicks_to_date"
+      - "cumulative_social_clicks_to_date"
+      - "content_click_ratio_to_date"
+      - "week_number"
+    indicator_columns:
+      - "has_vle_activity_to_date"
+
+feature_set_order:
+  - "A_simple_engagement_oulad"
+  - "B_engagement_oulad"
+
+comparison:
+  baseline_feature_set: "A_simple_engagement_oulad"
+  candidate_feature_set: "B_engagement_oulad"
+  primary_split: "temporal_forward"
+  fixed_model: "gradient_boosting"
+
+classification_models:
+  - "logistic_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+splits:
+  student_group:
+    test_size: 0.25
+    seed: 42
+  temporal_forward:
+    train_weeks: 20
+    student_test_size: 0.25
+    student_seed: 42
+
+seed: 42
+
+outputs:
+  experiments_dir: "data/artifacts/experiments/exp_012_oulad_engagement_bbb2013j"

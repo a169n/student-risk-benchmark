@@ -1,0 +1,134 @@
+experiment_id: "exp_011_kuleuven_engagement"
+title: "Third-institution engagement-only PASSED classification on KU Leuven (1819)"
+schema_version: "ku_leuven_engagement_v1"
+dataset_version: "KU Leuven 2026"
+dataset_config_name: "local KU Leuven dataset files; academic year 1819"
+parent_experiment: "exp_010_xai_on_oulad_bbb2013j"
+status: "completed"
+
+documentation:
+  objective: >
+    Transfer the engagement-only PASSED classification benchmark to KU Leuven
+    (academic year 1819) — a THIRD institution outside OULAD — to test whether
+    engagement signals derived from click-stream logs predict binary course
+    outcomes without any mastery or intermediate assessment features.
+    This experiment also runs permutation importance to identify WHICH engagement
+    features drive PASSED prediction in this institution.
+    NOTE: KU Leuven has NO numeric intermediate assessment scores and NO
+    meaningful continuous grade. Only binary classification (PASSED) is reported.
+    Regression is NOT applicable here (final_grade is a placeholder = float(passed)).
+    The mastery/Twin feature ablation from exp_005/exp_006/exp_009 CANNOT be
+    reproduced on KU Leuven due to the absence of assessment-score data.
+  hypothesis: >
+    Richer engagement features (B_engagement: multi-dimensional click behaviour,
+    session patterns, content type ratios, forum activity, temporal progress) will
+    improve PASSED classification F1 and ROC-AUC over the minimal two-feature
+    baseline (A_simple_engagement: cumulative clicks + active days only) on both
+    split strategies. The gain may be moderate rather than large given that the
+    simple baseline already captures the dominant engagement signal.
+    The permutation importance analysis is expected to surface cumulative_clicks_to_date
+    and cumulative_active_days_to_date as the top drivers, with cumulative_sessions_to_date
+    and avg_session_clicks_to_date also contributing under the richer feature set.
+  limitations:
+    - >
+      Dataset citation: Tiukhova, E., Van Landuyt, D., Baesens, B., & Snoeck, M. (2026).
+      Open data, private learners: a de-identified student activity and performance
+      dataset for learning analytics. Scientific Data. CC-BY-4.0,
+      Zenodo DOI 10.5281/zenodo.17087849.
+    - >
+      KU Leuven has no numeric intermediate assessment scores, so the mastery and
+      assessment-score feature blocks present in OULAD experiments CANNOT be built
+      or compared here. The engagement-only design is a constraint of this dataset,
+      not a design choice.
+    - >
+      The binary PASSED label encodes course-level outcome, not weekly learning
+      progress; this makes the classification task somewhat easier than a continuous
+      grade prediction because all weekly rows for a student share the same label.
+    - >
+      final_grade is set to float(passed) purely as a structural placeholder for
+      the shared pipeline. Any regression metric on this column is meaningless and
+      is NOT reported.
+    - >
+      The dataset covers two courses in academic year 1819 only; course-level
+      heterogeneity is not controlled for.
+    - >
+      Permutation importance is computed with n_repeats=15 on the held-out test set;
+      feature correlations can suppress individual importances.
+    - >
+      This benchmark cannot establish institutional deployment readiness; it is a
+      third-institution engagement-transfer stress test.
+  next_step: >
+    Compare the B-vs-A engagement delta here with the OULAD results from
+    exp_005/exp_009. If richer engagement consistently helps across all three
+    institutions, that strengthens the representation-transfer argument. If the
+    improvement is null, report it honestly as a cross-institution robustness
+    check. The permutation importance rankings across KU Leuven and OULAD should
+    be compared to identify stable drivers of PASSED prediction.
+
+data:
+  data_dir: "datasets/ku_leuven/dataset"
+  course_info_path: "datasets/ku_leuven/course_info.json"
+  year: "1819"
+  min_week: 2
+
+feature_sets:
+  A_simple_engagement:
+    description: >
+      Minimal KU Leuven engagement baseline: cumulative click volume and
+      cumulative active days only. Has-activity indicator added for leakage-safe
+      missingness handling.
+    columns:
+      - "cumulative_clicks_to_date"
+      - "cumulative_active_days_to_date"
+    indicator_columns:
+      - "has_activity_to_date"
+
+  B_engagement:
+    description: >
+      Rich KU Leuven engagement feature set: full multi-dimensional click
+      behaviour (total, sessions, active days, content-type, forum), session
+      efficiency ratios, content focus ratios, temporal course progress, and
+      the raw week counter. This is the candidate feature set that characterises
+      WHICH engagement dimensions drive PASSED prediction.
+    columns:
+      - "cumulative_clicks_to_date"
+      - "cumulative_active_days_to_date"
+      - "cumulative_sessions_to_date"
+      - "cumulative_content_clicks_to_date"
+      - "current_week_clicks"
+      - "avg_session_clicks_to_date"
+      - "content_click_ratio_to_date"
+      - "cumulative_forum_posts_to_date"
+      - "days_since_course_start"
+      - "week_number"
+    indicator_columns:
+      - "has_activity_to_date"
+
+feature_set_order:
+  - "A_simple_engagement"
+  - "B_engagement"
+
+comparison:
+  baseline_feature_set: "A_simple_engagement"
+  candidate_feature_set: "B_engagement"
+  primary_split: "temporal_forward"
+  fixed_model: "gradient_boosting"
+
+classification_models:
+  - "logistic_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+splits:
+  student_group:
+    test_size: 0.25
+    seed: 42
+  temporal_forward:
+    train_weeks: 8
+    student_test_size: 0.25
+    student_seed: 42
+
+seed: 42
+
+outputs:
+  experiments_dir: "data/artifacts/experiments/exp_011_kuleuven_engagement"

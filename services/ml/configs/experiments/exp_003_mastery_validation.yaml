@@ -1,0 +1,115 @@
+experiment:
+  experiment_id: "exp_003_mastery_validation"
+  title: "Mastery validation"
+  schema_version: "1.2"
+  dataset_version: "v1_3_refined"
+  dataset_config_name: "generator_v1_3_refined.yaml"
+  parent_experiment: "exp_002_twin_ablation"
+  status: "completed"
+
+documentation:
+  objective: >
+    Validate whether the mastery block (`current_topic_mastery`,
+    `overall_mastery`) is a trustworthy lean Twin component before the project
+    moves into XAI. This experiment focuses specifically on whether mastery
+    adds genuine signal beyond the `B_lms` baseline, or whether it acts as a
+    near-direct proxy for `final_grade`.
+  hypothesis: >
+    Mastery features are derived from the same submission scores that already
+    feed `B_lms` features such as `avg_assignment_score_to_date` and
+    `avg_quiz_score_to_date`. The expected outcome is that mastery offers a
+    modest improvement that is plausibly attributable to topic-level
+    aggregation, but does not collapse into a direct copy of `final_grade`.
+  limitations:
+    - >
+      The dataset is synthetic and the comparison cannot prove generalization
+      to real institutional data; it can only detect issues that already show
+      up in the synthetic generator.
+    - >
+      Drop-column tests are run on the current best regression model only;
+      they expose dependency on a single feature but do not produce a full
+      causal attribution.
+    - >
+      Temporal legitimacy of mastery is documented from the generator code in
+      `services/ml/src/generator/snapshots.py`; it is not currently enforced
+      by an automated lineage check, only by code review and feature-set
+      conventions.
+    - >
+      Per-week evaluation reuses the student-group split; week-cutoff
+      regression scores can therefore vary with the small per-week test sets,
+      so the validation looks at the early-week pattern as a whole rather
+      than at any single week in isolation.
+  next_step: >
+    If mastery is validated, carry `B_lms_plus_mastery` into the XAI phase as
+    the lean Twin candidate. If mastery looks too target-like or only useful
+    near the end of the course, narrow the carry-forward set or revisit the
+    generator before adding any explanation layer on top.
+
+mastery_validation:
+  primary_split: "student_group"
+  baseline_feature_set: "B_lms"
+  candidate_feature_set: "B_lms_plus_mastery"
+  optional_feature_sets:
+    - "B_lms_plus_trends_mastery"
+    - "C_twin_full"
+  mastery_columns:
+    - "current_topic_mastery"
+    - "overall_mastery"
+  improvement_rmse_tolerance: 0.05
+  early_week_max: 6
+  target_proxy_correlation_warn: 0.95
+  redundancy_correlation_warn: 0.95
+  weekly_cutoffs:
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+
+name: "exp_003_mastery_validation"
+seed: 42
+
+feature_sets:
+  - "B_lms"
+  - "B_lms_plus_mastery"
+  - "B_lms_plus_trends_mastery"
+  - "C_twin_full"
+
+classification_models: []
+
+regression_models:
+  - "linear_regression"
+  - "random_forest"
+  - "gradient_boosting"
+
+dataset:
+  snapshots_csv: "data/processed/student_twin_snapshots.csv"
+  final_results_csv: "data/raw/final_results.csv"
+  students_csv: "data/raw/students.csv"
+  courses_csv: "data/raw/courses.csv"
+
+snapshot_filter:
+  min_week: 4
+  max_week: null
+
+splits:
+  primary: "student_group"
+  secondary: "temporal_forward"
+  student_group:
+    test_size: 0.25
+    validation_size: 0.0
+    seed: 42
+  temporal_forward:
+    train_weeks: 6
+    student_test_size: 0.25
+    student_seed: 42
+
+eda:
+  enabled: false
+  correlation_top_k: 12
+
+outputs:
+  eda_dir: "data/artifacts/experiments/exp_003_mastery_validation/eda"
+  experiments_dir: "data/artifacts/experiments/exp_003_mastery_validation"

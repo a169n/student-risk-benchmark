@@ -1,0 +1,13 @@
+{
+  "experiment_id": "exp_023_cohort_intervals",
+  "fraction": 0.33,
+  "seed": 42,
+  "n_boot": 400,
+  "model": "gradient_boosting",
+  "representation": "raw",
+  "n_cohorts": 63,
+  "auc_min": 0.38423076923076926,
+  "auc_max": 0.9531590413943356,
+  "n_covering_chance": 18,
+  "n_below_chance": 1
+}
