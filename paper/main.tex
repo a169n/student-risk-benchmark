@@ -23,6 +23,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{textcomp}
 \usepackage{xcolor}
+% Loaded last, as hyperref requires. Without it \url only sets the address in
+% typewriter type; the link is not clickable. hidelinks keeps IEEE's plain look.
+\usepackage[hidelinks,breaklinks]{hyperref}
 
 \graphicspath{{figures/}}
 
@@ -41,7 +44,7 @@
 
 \begin{document}
 
-\title{A Five-Institution Benchmark for Student-Risk Models, and the Reference Points Explanation-Stability Claims Need}
+\title{Reference Points for Explanation-Stability Claims: A Five-Institution Student-Risk Benchmark}
 
 \ifblind
 \author{\IEEEauthorblockN{Anonymous submission}}
