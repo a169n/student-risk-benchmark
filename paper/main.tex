@@ -1,9 +1,8 @@
 % SIDe 2026 submission — IEEE double-column conference template.
-% ANONYMITY: set \blindtrue below for a double-blind submission and the author
-% block collapses to one anonymous line. It is currently \blindfalse, so names,
-% affiliations, ORCIDs and emails appear. The Reproducibility section still
-% promises an anonymised repository link; the named branch carries the real
-% URL, so switching to \blindtrue swaps it back out for that promise.
+% ANONYMITY: \blindtrue below collapses the author block to one anonymous line
+% and replaces the repository URL with a note; it is currently \blindtrue for
+% the double-blind revision. Switch to \blindfalse for the camera-ready version,
+% and rebuild both the PDF and the .docx (the builder reads the same flag).
 %
 % Reference audit, 6 Sep 2026: [5] Boujmiraz, [12] Schwerter and [18] Phiri
 % were each verified against Crossref/arXiv/DataCite and are correct as cited.
@@ -25,7 +24,7 @@
 \usepackage{xcolor}
 % Loaded last, as hyperref requires. Without it \url only sets the address in
 % typewriter type; the link is not clickable. hidelinks keeps IEEE's plain look.
-\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage[hidelinks,breaklinks,bookmarks=false]{hyperref}
 
 \graphicspath{{figures/}}
 
@@ -40,7 +39,7 @@
 \makeatother
 
 \newif\ifblind
-\blindfalse  % \blindtrue for anonymous review
+\blindfalse  % camera-ready (\blindtrue for anonymous review)
 
 \begin{document}
 
@@ -50,46 +49,42 @@
 \author{\IEEEauthorblockN{Anonymous submission}}
 \else
 \author{
-\IEEEauthorblockN{A. S. Talgatov}
-\IEEEauthorblockA{\textit{Master degree student} \\
-\textit{School of Software Engineering} \\
+\IEEEauthorblockN{Aibyn Talgatov}
+\IEEEauthorblockA{\textit{School of Software Engineering} \\
 \textit{Astana IT University} \\
 Astana, Kazakhstan \\
 ORCID: 0009-0006-3463-4644 \\
-a1byn.talgat05@gmail.com}
+255308@astanait.edu.kz}
 \and
-\IEEEauthorblockN{S. A. Nurgaliyeva*}
-\IEEEauthorblockA{\textit{PhD in computer science} \\
-\textit{School of Software Engineering} \\
+\IEEEauthorblockN{Symbat Nurgaliyeva}
+\IEEEauthorblockA{\textit{School of Software Engineering} \\
 \textit{Astana IT University} \\
 Astana, Kazakhstan \\
 ORCID: 0009-0009-5880-6166 \\
 symbat.nurgaliyeva@astanait.edu.kz}
 \and
-\IEEEauthorblockN{Z. Basheyeva}
+\IEEEauthorblockN{Zhuldyz Basheyeva}
 \IEEEauthorblockA{\textit{School of Software Engineering} \\
 \textit{Astana IT University} \\
 Astana, Kazakhstan \\
 ORCID: 0000-0001-9605-2101 \\
 zhuldyz.basheyeva@astanait.edu.kz}
 \linebreakand
-\IEEEauthorblockN{A. Sakhipov}
-\IEEEauthorblockA{\textit{PhD, Assistant Professor} \\
-\textit{IEEE Senior Member} \\
-\textit{School of Software Engineering} \\
+\IEEEauthorblockN{Aivar Sakhipov}
+\IEEEauthorblockA{\textit{School of Software Engineering} \\
 \textit{Astana IT University} \\
 Astana, Kazakhstan \\
 ORCID: 0000-0003-1045-4199 \\
 aivar.sakhipov@astanait.edu.kz}
 \and
-\IEEEauthorblockN{N. Turysbek}
+\IEEEauthorblockN{Nazym Turysbek}
 \IEEEauthorblockA{\textit{School of Cybersecurity} \\
 \textit{Astana IT University} \\
 Astana, Kazakhstan \\
 ORCID: 0009-0000-0932-3525 \\
 n.turysbek@astanait.edu.kz}
 \and
-\IEEEauthorblockN{M. Kali}
+\IEEEauthorblockN{Marzhan Kali}
 \IEEEauthorblockA{\textit{School of Cybersecurity} \\
 \textit{Astana IT University} \\
 Astana, Kazakhstan \\
@@ -105,11 +100,11 @@ marzhan.kali@astanait.edu.kz}
 Studies of student-risk models are almost always run on one dataset, and studies
 of their explanations on one importance estimator. We release a benchmark that
 removes the first restriction and use it to show why the second one matters. The
-benchmark covers 63 cohorts from five universities on five learning-management
-platforms in four countries, 35{,}529 distinct students, harmonised to one
+benchmark covers 63 cohorts from five universities on three learning-management
+platforms in five countries, 35{,}529 distinct students, harmonised to one
 seven-feature schema, with adapters and frozen results released. Three findings
 follow. First, predictability varies far more than any single-dataset study can see, and most of that variation tracks the institution rather than the task: within-cohort ROC-AUC spans 0.384 to 0.953 across the 63 cohorts and 0.527 to 0.845 across institution means, and 18 cohorts have bootstrap intervals covering chance, so a single-dataset result describes its dataset.
-Second, we test on this population the reported finding that the choice of explainer matters more than the sample a model is trained on, and find the comparison has no estimator-free answer. Permutation importance and SHAP agree with each other at Kendall $\tau$ 0.410, which is above permutation's own within-cohort reference of 0.345 and below SHAP's of 0.592: the reported ordering holds under one estimator and reverses under the other. Establishing that required reference points the original design could not supply --- a noise floor of 0.706, a within-cohort reference measured under each estimator, and an analytic random baseline. Third, a single-estimator stability study reports a conclusion conditional on an undeclared choice: measuring how much a year of retraining costs a feature ranking gives $\tau$ 0.256 under permutation importance and 0.508 under SHAP, while the cost itself is the same under both, 0.089 and 0.083, so the estimator moves the reported level by three times the effect under study. We also report two
+Second, we test on this population the reported finding that the choice of explainer matters more than the sample a model is trained on, and find the comparison has no estimator-free answer. Permutation importance and SHAP agree with each other at Kendall $\tau$ 0.410, which is above permutation's own within-cohort reference of 0.345 and below SHAP's of 0.592: the reported ordering holds under one estimator and reverses under the other. Third, a single-estimator stability study reports a conclusion conditional on an undeclared choice: measuring how much a year of retraining costs a feature ranking gives $\tau$ 0.256 under permutation importance and 0.508 under SHAP, a gap of 0.252 (95\,\% interval 0.204--0.298), while the cost itself, 0.173 and 0.129, differs by an amount whose interval covers zero, so the estimator moves the reported level by more than the effect under study. We also report two
 measurement hazards found by auditing our own pipeline, and a zero-training
 baseline that gradient boosting fails to beat in 38 of 63 cohorts.
 \end{abstract}
@@ -125,22 +120,22 @@ Two habits shape the empirical literature on student-risk prediction. Models are
 developed and evaluated on a single dataset, usually one institution's.
 Explanations are computed with a single importance estimator, usually whichever
 library the authors reached for. Neither habit is examined, because examining
-either requires resources most studies do not have: many institutions, or many
+either needs what most studies lack: many institutions, or many
 estimators applied to the same models.
 
-This paper supplies both and reports what they show. It is a resource paper with a measurement result attached, not a methods paper: we propose no new model, explainer or transfer technique. Three of our own candidate methods were discarded when controls showed they did not beat far simpler alternatives; those controls are in Section~\ref{sec:controls} because they bound how the rest should be read.
+This paper supplies both. It is a resource paper with a measurement result attached, not a methods paper: we propose no new model, explainer or transfer technique.
 
 Contributions:
 
 \begin{enumerate}
 \item A public five-institution benchmark: 63 cohorts, 35{,}529 distinct
-students, five platforms, four countries, one harmonised schema, with adapters,
+students, three platforms, five countries, one harmonised schema, with adapters,
 cohort definitions and frozen results released (Section~\ref{sec:data}).
 \item The spread of predictability across institutions, which a single-dataset
 study cannot observe (Section~\ref{sec:pred}).
 \item An attempted replication of the finding that explainer choice matters more than the training sample \cite{swamy2022}, on a population five times larger and structurally different, which turns out to depend on which estimator supplies the reference (Section~\ref{sec:agree}).
-\item A methodological consequence: single-estimator stability studies report
-conclusions conditional on an undeclared choice, and we quantify by how much
+\item A consequence: single-estimator stability studies report
+conclusions conditional on an undeclared choice; we quantify how much
 (Section~\ref{sec:cond}).
 \item Two measurement hazards and a baseline audit that changed our own
 conclusions mid-project (Section~\ref{sec:controls}).
@@ -154,7 +149,7 @@ configuration, and reviews catalogue hundreds of such systems
 \cite{bettahi2025,boujmiraz2026,guevara2025}. The reporting unit is one
 configuration on one cohort.
 
-\textbf{Cross-institution work.} Transfer of student models is well studied: across 24 Moodle courses \cite{lopez2020,lopez2022}, four US universities on private data \cite{gardner2023}, two universities \cite{schwerter2026}, 532 courses at one institution \cite{riestra2021}, and between partner institutions as early as 2014 \cite{jayaprakash2014}. What is missing is not the question but a harmonised, multi-platform corpus another group can run against. That is the gap this benchmark fills.
+\textbf{Cross-institution work.} Transfer of student models is well studied: across 24 Moodle courses \cite{lopez2020,lopez2022}, four US universities on private data \cite{gardner2023}, two universities \cite{schwerter2026}, 532 courses at one institution \cite{riestra2021}, and between partner institutions as early as 2014 \cite{jayaprakash2014}. What is missing is a harmonised, multi-platform corpus others can run against, the gap this benchmark fills.
 
 \textbf{Explanation stability.} Tiukhova et al.\ showed with SHAP that importance
 rankings of student-success models shift across cohorts and years of one
@@ -177,22 +172,39 @@ our result rather than as a competing explanation of it.
 
 \section{The Benchmark}\label{sec:data}
 
-\subsection{Five institutions, five platforms}
+\subsection{Five institutions, three platforms, five countries}
 
-Table~\ref{tab:cohorts} summarises the corpus. A cohort is one course, one
+Table~\ref{tab:cohorts} summarises the corpus and Fig.~\ref{fig:pipeline} the
+pipeline that produces it. A cohort is one course, one
 academic period, one institution, admitted with at least 50 students and at least
 15 in the rarer outcome class. Cohort sizes sum to 45{,}158, but only 35{,}529
 students are distinct: 7{,}995 of them, 22.5\,\%, appear in more than one cohort, which
-Section~\ref{sec:controls} shows is not a bookkeeping detail. Outcome definitions
+Section~\ref{sec:controls} shows is not a bookkeeping detail. Within a cohort a
+student contributes exactly one row, so the folds of the within-cohort
+cross-validation never share a student; repetition is a cross-cohort matter,
+and Section~\ref{sec:controls} reports it per pair. Outcome definitions
 differ across institutions and are perfectly collinear with institution, so no
 analysis here separates a label effect from an institution effect; OULAD in
 particular counts withdrawal as failure, which a clickstream predicts almost by
-construction.
+construction. Every cross-institution number in this paper --- the
+per-institution means of Table~\ref{tab:cohorts}, the variance share in
+Section~\ref{sec:pred}, the bottom rung of Fig.~\ref{fig:instability} --- is
+therefore reported as describing the corpus, not as an effect of
+institution, and the measurement result of Sections~\ref{sec:agree}
+and~\ref{sec:cond} rests only on comparisons within one cohort or one course,
+where the outcome definition is fixed.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\columnwidth]{fig0_pipeline.pdf}
+\caption{The pipeline, from five public releases to the reference points. Blue stages build the benchmark; ochre stages evaluate on it.}
+\label{fig:pipeline}
+\end{figure}
 
 % Spans both columns: five columns of text do not fit a 3.5 in column, and at
 % in-column width the institution names collide with the adjacent body text.
 \begin{table*}[t]
-\caption{The benchmark, and within-cohort discrimination per institution. Pass rate is the share of a cohort's students recorded as passing, shown as the range over that institution's cohorts; the AUC column is the mean over them. Within-cohort ROC-AUC is 5-fold cross-validated gradient boosting on the shared seven-feature schema.}
+\caption{The benchmark. Pass rate is the range over the institution's cohorts; within-cohort ROC-AUC is the mean of 5-fold cross-validated gradient boosting over them, descriptive only because outcome definitions differ by institution.}
 \label{tab:cohorts}
 \centering
 \begin{tabular}{@{}llccrrr@{}}
@@ -205,7 +217,7 @@ KU Leuven \cite{tiukhova2026}            & Toledo & Belgium      & 6  & 3{,}939 
 Univ.\ de Oviedo \cite{riestra2021}      & Moodle & Spain        & 20 & 3{,}789  & 0.26--0.84 & 0.606 \\
 Univ.\ of Zambia \cite{phiri2026,phiri2026paper} & Moodle & Zambia       & 2  & 117      & 0.25--0.38 & 0.527 \\
 \midrule
-Total & 5 platforms & 4 countries & 63 & 35{,}529 distinct & 0.25--0.95 & --- \\
+Total & 3 platforms & 5 countries & 63 & 35{,}529 distinct & 0.25--0.95 & --- \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -216,30 +228,23 @@ Each adapter emits four weekly counters per student --- clicks, active days,
 content clicks, social clicks --- from which seven leakage-safe features are
 derived identically: four cumulative counters, current-week clicks, active weeks
 so far, and weeks since last activity. No demographic or assessment feature
-enters the models; three institutions publish none. Course lengths run from 14 to
+enters the models; three institutions publish none. Courses run 14 to
 46 weeks, so the prediction point is relative: one row per student at week
 $\lceil \tfrac{1}{3} \times \text{length} \rceil$, repeated at $\tfrac{1}{4}$ and
 $\tfrac{1}{2}$.
 
 \textbf{Terminology.} This per-student weekly state is often called a digital
-twin of the learner, and the term is graded. Kritzinger et al.\ separate its
-levels by data flow: a \emph{digital model} exchanges nothing automatically, a
-\emph{digital shadow} carries an automated one-way flow from the object to its
-representation, and a \emph{digital twin} closes the loop with a flow back
-\cite{kritzinger2018}; Addanki and Corrin apply the two-way requirement to
-learners specifically \cite{addanki2023}. Our schema is one-way by construction
---- logs advance the representation and nothing is written back to the student
---- so it is a digital shadow of the learner, and we claim no simulation,
-counterfactual or intervention capability. Systems that do close the loop keep a
-human inside it: mobile formative-assessment designs route model-scored
-responses through a teacher who can inspect and override them before feedback
-reaches the student \cite{yerniyazov2026}. That review step is the safeguard our
-correlational evidence cannot supply on its own. The distinction is load-bearing
-here rather than pedantic. Closing the loop means acting on the representation, and
-acting on it means reading its feature attributions causally --- which is
-precisely what Section~\ref{sec:agree} argues against, since the attributions
-move more between estimators than the effect under study. A representation whose
-explanations are this unstable has no warrant to write back.
+twin of the learner, but the term is graded by data flow: a \emph{digital
+shadow} carries an automated one-way flow from the object to its representation,
+and a \emph{digital twin} closes the loop with a flow back
+\cite{kritzinger2018,addanki2023}. Our schema is one-way by construction, so it
+is a digital shadow, and we claim no simulation, counterfactual or intervention
+capability; systems that do close the loop keep a teacher who can inspect and
+override model-scored output before it reaches the student
+\cite{yerniyazov2026}. The distinction is load-bearing: closing the loop means
+reading feature attributions causally, which Section~\ref{sec:agree} argues
+against, since the attributions move more between estimators than the effect
+under study.
 
 The three Moodle institutions publish no course calendar, so an active span is
 inferred from the log as the first to the last week in which at least 10\,\% of
@@ -249,14 +254,17 @@ identical filenames, so a naive loader silently returns the same year three
 times; and another records a single final examination mark per student with no
 sitting year, so assigning it to every year in which a student appears leaks a
 later outcome backwards. Fixing the second cost one cohort, and we report the
-smaller benchmark rather than the leaked one.
+smaller benchmark, not the leaked one.
 
 \section{Method}
 
 \textbf{Models.} A fixed gradient-boosting classifier \cite{friedman2001} (200
 trees, depth 3, learning rate 0.05) is the primary model, with logistic
-regression and a random forest as robustness checks. Nothing is tuned per cohort:
-the object of study is what an ordinary model does.
+regression and a random forest as robustness checks (Table~\ref{tab:models}).
+Nothing is tuned per cohort: the object of study is what an ordinary model does.
+The explanation analyses use gradient boosting alone, since TreeSHAP needs a
+tree ensemble and those analyses hold the model fixed while the
+estimator varies.
 
 \textbf{Explainers.} Three importance estimators are applied to the same fitted
 model on the same held-out students: \emph{permutation} importance (three
@@ -278,14 +286,14 @@ institution. All 3{,}969 ordered source--target combinations are evaluated, incl
 \subsection{How far predictability varies, and with what}\label{sec:pred}
 
 The last column of Table~\ref{tab:cohorts} gives within-cohort discrimination per
-institution, but those are means, and the claim is about spread.
+institution, but those are means; the claim is about spread.
 Fig.~\ref{fig:spread} gives one row per cohort. Within-cohort ROC-AUC runs from
-0.384 to 0.953, each interval a 400-resample bootstrap over the students in that
-cohort. Eighteen of the 63 intervals cover 0.5, and one Oviedo course sits
-entirely below it at 0.384. A study reporting 0.85 and a study reporting 0.55 may
-be equally competent and equally correct about their own data.
+0.384 to 0.953, each interval a 400-resample bootstrap over that
+cohort's students. Eighteen of the 63 intervals cover 0.5, and one Oviedo course sits
+entirely below it at 0.384. A study reporting 0.85 and one reporting 0.55 may
+be equally competent and correct about their data.
 
-Institution accounts for 57.3\,\% of the variance in cohort AUC, as the between-group share of the total sum of squares in a one-way analysis of variance over the five institutions. The remainder is
+Institution --- and with it platform, outcome definition and scale, which are collinear here --- accounts for 57.3\,\% of the variance in cohort AUC, as the between-group share of the total sum of squares in a one-way analysis of variance over the five institutions; the figure describes the corpus and is not an estimate of an institution effect. The remainder is
 not noise: OULAD's 19 cohorts occupy a narrow band from 0.709 to 0.897, while
 Oviedo's 20 span almost the entire axis, so within one institution the variation
 can be as large as between institutions. Nor is the institution effect clean.
@@ -293,34 +301,63 @@ Cohort AUC correlates 0.669 with cohort size, and the median OULAD cohort
 holds 1{,}614 students, twelve times the median Oviedo cohort; institution, platform, outcome definition
 and scale are collinear here, and this benchmark cannot separate them. What it
 does establish is the size of the target a single-cohort result is estimating,
-which is the quantity a single-dataset design cannot observe at all.
+which a single-dataset design cannot observe.
 
-\begin{figure}[t]
+The spread is not a property of gradient boosting. Table~\ref{tab:models}
+repeats the within-cohort measurement with logistic regression and a random
+forest: the ordering of institutions is the same under all three, the three
+models sit within 0.05 of one another at every institution but Zambia, whose
+two cohorts hold 117 students between them, and logistic regression is the best
+of the three overall, 0.717 against 0.691 and 0.692. Transferred to another
+institution, all three lose most of what they had.
+
+\begin{table}[t]
+\caption{Mean within-cohort ROC-AUC per institution for the three model families and the zero-training rule; the last row is cross-institution transfer on pairs that share no student.}
+\label{tab:models}
 \centering
-\includegraphics[width=\columnwidth]{fig2_cohort_spread.pdf}
-\caption{Within-cohort ROC-AUC for every cohort, sorted, with 400-resample bootstrap intervals over students; colour marks the institution. Institution accounts for 57.3\,\% of the variance, but not cleanly: cohort size correlates 0.669 with AUC and is itself collinear with institution.}
+\footnotesize
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+ & Gradient & Logistic & Random & Rule: active \\
+ & boosting & regression & forest & days \\
+\midrule
+Open University & 0.845 & 0.858 & 0.848 & 0.830 \\
+KwaZulu-Natal & 0.667 & 0.716 & 0.673 & 0.717 \\
+KU Leuven & 0.608 & 0.652 & 0.614 & 0.655 \\
+Oviedo & 0.606 & 0.630 & 0.611 & 0.631 \\
+Zambia & 0.527 & 0.449 & 0.418 & 0.565 \\
+\midrule
+All 63 cohorts & 0.691 & 0.717 & 0.692 & 0.713 \\
+Another institution & 0.596 & 0.598 & 0.630 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{fig2_cohort_spread.pdf}
+\caption{The 63 cohorts. (a) Size and pass rate; colour and marker identify the institution. (b) Within-cohort ROC-AUC, sorted, with 400-resample bootstrap intervals over students.}
 \label{fig:spread}
-\end{figure}
+\end{figure*}
 
 \subsection{Reference points, and a replication with no estimator-free answer}\label{sec:agree}
 
-Fig.~\ref{fig:instability} places every comparison in this paper on one axis.
-Two models differing only in which half of one cohort they saw agree at $\tau$ 0.338 under permutation importance. That is the most such a comparison attains under that estimator, and it is far below what a teacher-facing factor list implicitly promises. The noise floor of 0.706 confirms this is not estimator variance.
+Fig.~\ref{fig:instability} places every comparison in this paper on one axis, and the grey bars are what the others are read against. The noise floor is what one fitted model scores against itself when only the permutation seed changes, so no bar can be read as stable above it; the random baseline, $\tau$ 0.000, is the axis origin. Two models differing only in which half of one cohort they saw agree at $\tau$ 0.338 (0.279--0.398) under permutation importance: that ceiling is the most such a comparison attains under it, and every bar measured under permutation importance (blue and brown) is read against it, while the two cross-estimator bars (orange) have no single estimator's scale and are read against each estimator's own reference in Table~\ref{tab:cond}. The noise floor of 0.706 (0.669--0.742) rules out estimator variance.
 
 Against those bounds, the estimator comparison. Applied to one fitted model on
-one set of students, permutation importance and SHAP agree at $\tau$ 0.410, permutation and drop-column at 0.259, SHAP and drop-column at 0.127. Taken bare, the two low numbers look like the conclusion of Swamy et al.\ \cite{swamy2022} --- that the explainer is a first-order determinant of the resulting factor list --- now on 63 cohorts across five institutions and three model families rather than five MOOCs and one network. Taken against the bounds, neither is a like-for-like arm: one estimator is degenerate here, and the remaining pair has no single scale.
+one set of students, permutation importance and SHAP agree at $\tau$ 0.410 (0.355--0.464), permutation and drop-column at 0.259 (0.213--0.303), SHAP and drop-column at 0.127 (0.074--0.179). Taken bare, the two low numbers look like the conclusion of Swamy et al.\ \cite{swamy2022} --- that the explainer is a first-order determinant of the resulting factor list --- now on 63 cohorts across five institutions, on one gradient-boosting model rather than one recurrent network over five MOOCs. Taken against the bounds, neither is a like-for-like arm: one estimator is degenerate here, and the remaining pair has no single scale.
 
 One arm requires a caveat we report rather than hide. Four of the seven features
 are cumulative counters of the same behaviour, and removing one leaves
-near-duplicates behind, so drop-column importance is zero or negative for 3.2 of 7 features on average, against 2.0 for permutation and 0.1 for SHAP. Its agreement with itself across resamples of one cohort is 0.173 --- lower than its agreement with permutation on identical data, and against 0.592 for SHAP. On collinear behavioural features, drop-column is
-not a reliable estimator, and 0.127 should be read as evidence about that estimator in this setting rather than as a headline. The defensible figure is the permutation-versus-SHAP agreement of 0.410, and it does not settle the question, because a cross-estimator quantity has no single estimator's scale. Against permutation importance's own within-cohort reference of 0.345 it is high, and the explainer matters \emph{less} than the training sample; against SHAP's 0.592 it is low, and the explainer matters \emph{more}, which is the ordering Swamy et al.\ report. The permutation-only ceiling of 0.338 is the strictest reference we have and supports the first reading, but it too is one estimator's. The comparison has no estimator-free answer here, and Section~\ref{sec:cond} measures why.
+near-duplicates behind, so drop-column importance is zero or negative for 3.2 of 7 features on average, against 2.0 for permutation and 0.1 for SHAP. Its agreement with itself across resamples of one cohort is 0.173 (0.120--0.227) --- lower than its agreement with permutation on identical data, and against 0.592 (0.540--0.641) for SHAP. On collinear behavioural features, drop-column is
+not a reliable estimator, and 0.127 should be read as evidence about that estimator in this setting rather than as a headline. The defensible figure is the permutation-versus-SHAP agreement of 0.410, and it does not settle the question, because a cross-estimator quantity has no single estimator's scale. Against permutation importance's own within-cohort reference of 0.345 (0.287--0.401) it is high, and the explainer matters \emph{less} than the training sample; against SHAP's 0.592 it is low, and the explainer matters \emph{more}, which is the ordering Swamy et al.\ report. The permutation-only ceiling of 0.338 is the strictest reference we have and supports the first reading, but it too is one estimator's. The comparison has no estimator-free answer here, and Section~\ref{sec:cond} measures why.
 
 % Nine sentence-length category labels: at 3.4 in the tick text renders near
 % 4 pt. Spanning both columns is the only way this figure stays readable.
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.70\textwidth]{fig1_explanation_instability.pdf}
-\caption{Every agreement comparison in this paper on one scale, with its bounds; colour marks what differed between the two rankings. The floor and ceiling bars are measured under permutation importance and carry its scale, so a bar above them is not above a universal ceiling; each estimator's own reference is in Table~\ref{tab:cond}. Starred bars involve drop-column, degenerate here --- 3.2 of 7 features receive zero or negative importance, self-agreement 0.173.}
+\includegraphics[width=0.86\textwidth]{fig1_explanation_instability.pdf}
+\caption{Every agreement comparison in this paper on one scale. Colour marks what differed between the two rankings; whiskers are 95\,\% cluster-bootstrap intervals over cohorts, or over target cohorts for the three transfer bars; dotted lines mark the floor and the ceiling, and the axis origin, $\tau = 0$, is the expected agreement of two independent rankings. Starred bars involve drop-column, degenerate here (Section~\ref{sec:agree}).}
 \label{fig:instability}
 \end{figure*}
 
@@ -328,29 +365,28 @@ not a reliable estimator, and 0.127 should be read as evidence about that estima
 
 The practical consequence is sharper than the comparison above. Take a question the literature does ask --- how much does retraining on the next year's students change a model's feature ranking? --- and answer it three times, changing only the estimator, on the same 78 course-year pairs, the same fitted models and the same held-out thirds (Table~\ref{tab:cond}).
 
-Each estimator needs its own reference, because they disagree on the level even when nothing is retrained. Applied twice to one cohort under two different splits, SHAP reproduces itself at $\tau$ 0.592 and permutation importance at 0.345. Against those references, a year of retraining costs 0.083 under SHAP and 0.089 under permutation: the same effect to within 0.006. The level at which that effect is reported differs by 0.252, roughly three times the effect itself. Fig.~\ref{fig:instability} shows the ladder's own D1 rung at 0.210 rather than 0.256, because the ladder scores a source model on the whole target cohort instead of a held-out third; the gap between protocols is small beside the gap between estimators.
+Each estimator needs its own reference, because they disagree on the level even when nothing is retrained. Applied twice to the cohorts in those pairs under two different splits, SHAP reproduces itself at $\tau$ 0.638 (0.595--0.678) and permutation importance at 0.429 (0.383--0.472). Against those references, a year of retraining costs 0.129 (0.091--0.167) under SHAP and 0.173 (0.123--0.224) under permutation; the paired difference, -0.043, has an interval of -0.095 to 0.009 (Wilcoxon signed-rank $p = 0.15$), so as far as these pairs can tell the two estimators see an effect of one size. The level at which that effect is reported differs by 0.252 (0.204--0.298; $p < 0.001$), 1.7 times the mean effect of 0.151. Fig.~\ref{fig:instability} shows the ladder's D1 rung at 0.210, not 0.256, because the ladder scores the whole target cohort, not a held-out third; the gap between protocols is small beside that between estimators.
 
-\begin{table}[t]
-\caption{The same question, three estimators, on identical models and evaluation sets: 78 course-year pairs, three splits each. The third column is the answer a study would report; the fourth is the effect it is trying to measure, differenced before rounding. $^{*}$Drop-column is degenerate here (Section~\ref{sec:agree}).}
+\begin{table*}[t]
+\caption{One question, three estimators, on identical models and evaluation sets: 78 course-year pairs, three splits each; brackets are 95\,\% bootstrap intervals over the pairs. $^{*}$Degenerate here (Section~\ref{sec:agree}).}
 \label{tab:cond}
 \centering
-\small
 \begin{tabular}{@{}lccc@{}}
 \toprule
-Estimator & Same cohort, & Next year's & Cost of \\
- & another split & students & one year \\
+Estimator & Same cohort, another split & Next year's students & Cost of one year \\
 \midrule
-SHAP & 0.592 & 0.508 & 0.083 \\
-Permutation importance & 0.345 & 0.256 & 0.089 \\
-Drop-column$^{*}$ & 0.173 & 0.055 & 0.118 \\
+SHAP & 0.638 [0.595, 0.678] & 0.508 [0.471, 0.545] & 0.129 [0.091, 0.167] \\
+Permutation importance & 0.429 [0.383, 0.472] & 0.256 [0.214, 0.298] & 0.173 [0.123, 0.224] \\
+Drop-column$^{*}$ & 0.199 [0.146, 0.253] & 0.055 [0.021, 0.089] & 0.144 [0.077, 0.212] \\
 \midrule
-\multicolumn{3}{@{}l}{Spread from the estimator choice} & 0.252 \\
-\multicolumn{3}{@{}l}{Effect being measured} & 0.086 \\
+\multicolumn{3}{@{}l}{Spread of the level, SHAP $-$ permutation (paired bootstrap; Wilcoxon $p < 0.001$)} & 0.252 [0.204, 0.298] \\
+\multicolumn{3}{@{}l}{Mean cost of one year, SHAP and permutation} & 0.151 \\
+\multicolumn{3}{@{}l}{Cost difference, SHAP $-$ permutation (paired bootstrap; Wilcoxon $p = 0.15$)} & $-$0.043 [$-$0.095, 0.009] \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
-A stability study that fixes one estimator therefore reports a number that is as much a property of that choice as of the data, and none we are aware of declares which estimator produced it. The recommendation is concrete and cheap: report agreement under at least two estimators, and report what each one scores when nothing has changed, since without that reference a $\tau$ has no scale.
+A stability study that fixes one estimator therefore reports a number that is as much a property of that choice as of the data, and none we know of declares which estimator produced it. The recommendation is cheap: report agreement under at least two estimators, and what each scores when nothing has changed, since without that reference a $\tau$ has no scale.
 
 \subsection{Three controls that changed our own conclusions}\label{sec:controls}
 
@@ -361,8 +397,8 @@ Behavioural counters carry roughly what a single attendance counter already
 carries; the value of a model here scales with what it knows beyond attendance.
 
 \textbf{A majority-class metric.} Our first implementation computed F1 with the
-default positive label, which is \emph{passing}. Every configuration looked
-healthy while losing, on the class an alerting system acts upon, to a rule that
+default positive label, \emph{passing}. Every configuration looked
+healthy while losing, on the class an alerting system acts on, to a rule that
 alerts everyone. The check costs one line: print the trivial rule beside every
 score \cite{bosch2018}.
 
@@ -374,35 +410,31 @@ evaluation of this shape must report per-pair overlap.
 
 \section{Discussion and Limitations}
 
-The benchmark's value is in what it makes cheap: any group can now run a proposed model, representation or explainer against 63 cohorts from five platforms and report the same reference points we do. That is a modest contribution and a real one, since the difficulty visible in Section~\ref{sec:pred} --- results describe datasets --- has no remedy but more datasets in one place.
+The benchmark makes one thing cheap: anyone can run a new model, representation or explainer against 63 cohorts from three platforms in five countries and report our reference points.
 
-The measurement result is a caution rather than a discovery. Swamy et al.\ established that the explainer dominates the training sample \cite{swamy2022}; on this population that ordering holds against SHAP's reference and reverses against permutation importance's. We read that not as a refutation --- their models, features and population all differ from ours --- but as evidence that a claim of this form cannot be evaluated until the reference is named, and that naming it can decide the answer. Section~\ref{sec:cond} is the part we believe is new and the part
-practitioners should act on: a stability number without a declared estimator, and without what that estimator scores when nothing has changed, is not interpretable, and the literature currently reports such numbers routinely.
+The measurement result is a caution rather than a discovery. Swamy et al.\ established that the explainer dominates the training sample \cite{swamy2022}; on this population that ordering holds against SHAP's reference and reverses against permutation importance's. We read that not as a refutation --- their models, features and population all differ from ours --- but as evidence that a claim of this form cannot be evaluated until the reference is named, and that naming it can decide the answer.
 
-\textbf{Limitations.} Seven behavioural features are strongly correlated, which
-is exactly the setting in which importance is least identifiable and in which
+\textbf{Limitations.} Seven behavioural features are strongly correlated, exactly
+the setting where importance is least identifiable and in which
 drop-column degenerates; richer feature sets may behave differently and we cannot
-test that where assessment data is unpublished. Three estimators are not
-exhaustive. Outcome semantics differ across institutions and are collinear with
-institution. Course calendars for three institutions are inferred rather than published. The $\tfrac{1}{3}$ cutoff is not load-bearing: at $\tfrac{1}{4}$ and $\tfrac{1}{2}$ every level moves and no ordering does, with cross-institution explanation agreement 0.038, 0.034 and 0.029 at the three cutoffs and accuracy rising with the later one. Zambia contributes two small cohorts whose intervals cover chance.
-Bootstrap intervals resample pairs that share target cohorts and are narrower
-than fully clustered intervals; the estimator spread in Section~\ref{sec:cond} is
-reported without a significance test and rests on 78 course-year pairs, three splits each, from six course families. Everything here is correlational, and Section~\ref{sec:agree} is an
+test that where assessment data is unpublished. Outcome semantics differ across institutions and are collinear with
+institution. Three institutions' course calendars are inferred, not published. The $\tfrac{1}{3}$ cutoff is not load-bearing: at $\tfrac{1}{4}$ and $\tfrac{1}{2}$ every level moves and no ordering does, with cross-institution explanation agreement 0.038, 0.034 and 0.029 at the three cutoffs and accuracy rising with the later one.
+The intervals on agreement figures resample cohorts, or target cohorts, and so price the sampling of cohorts, not of students within them; the estimator spread in Section~\ref{sec:cond} rests on 78 course-year pairs, three splits each, from 16 course families at four institutions, and pairs from one family are not independent, so its interval is narrower than a family-clustered one would be. Cross-institution comparisons are descriptive throughout, for the reason given in Section~\ref{sec:data}. Everything here is correlational, and Section~\ref{sec:agree} is an
 argument against reading any of these rankings causally.
 
 \section{Conclusion}
 
-We release a benchmark of 63 student cohorts from five universities, five
-platforms and four countries, harmonised to one schema, with adapters and frozen
-results. Within-cohort predictability spans 0.384 to 0.953 across those cohorts, so a single-dataset result is a statement about its dataset. We supply the floor, ceiling and random baseline an explanation-agreement number needs to be read at all, and find the reported dominance of the explainer over the training sample holds or reverses according to which estimator supplies the reference. The consequence we would most like read is narrow: a stability number reported with one estimator and no same-data reference has a level that moves by three times the effect under study when the estimator changes. Reporting two, and what each scores when nothing has changed, costs one run and makes the answer mean something.
+We release a benchmark of 63 student cohorts from five universities, three
+platforms and five countries, harmonised to one schema, with adapters and frozen
+results. Within-cohort ROC-AUC spans 0.384 to 0.953, so a single-dataset result is a statement about its dataset. We supply the floor, ceiling and random baseline an explanation-agreement number needs to be read at all, and find the reported dominance of the explainer over the training sample holds or reverses according to which estimator supplies the reference. The consequence we most want read is narrow: a stability number reported with one estimator and no same-data reference has a level that moves, when the estimator changes, by more than the effect under study. Reporting two, and what each scores when nothing has changed, costs one run and makes the answer mean something.
 
 \section*{Reproducibility}
 
-We release the five institution adapters, the cohort definitions, the experiment code and the frozen result files, together with a script that recomputes every number in this paper from those files. We redistribute none of the student data. All five releases are published openly by their originating institutions, four of them under a DOI, and the repository records for each the source, the licence and the path an adapter expects, so the adapters read a copy the reuser downloads. \ifblind An anonymised repository is linked from the submission record; the permanent link replaces this note in the camera-ready version.\else Everything named here is at \url{https://github.com/a169n/student-risk-benchmark}.\fi
+We release the five institution adapters, the cohort definitions, the experiment code and the frozen result files, together with a script that recomputes every number in this paper from those files. We redistribute none of the student data. All five releases are published openly by their originating institutions, four under a DOI; the repository records each source, licence and expected path, and the adapters read a copy the reuser downloads. \ifblind An anonymised repository is linked from the submission record; the permanent link replaces this note in the camera-ready version.\else Everything named here is at \url{https://github.com/a169n/student-risk-benchmark}.\fi
 
 \section*{Ethics}
 
-All five datasets are published in de-identified form by their originating institutions, and this work is a secondary analysis of those public releases: no student was contacted and no re-identification was attempted. No demographic attribute enters any model. One release ships a name column beside its hashed student identifier. We did not inspect it and cannot say whether those names are real; our adapter never reads it and joins on the hashed identifier alone. We note it so that other reusers make that choice deliberately.
+All five datasets are published in de-identified form by their originating institutions, and this is a secondary analysis of those releases: no student was contacted and no re-identification was attempted. No demographic attribute enters any model. One release ships a name column beside its hashed student identifier; our adapter never reads it and joins on the hash alone, and we note it so other reusers choose deliberately.
 
 \begin{thebibliography}{00}
 

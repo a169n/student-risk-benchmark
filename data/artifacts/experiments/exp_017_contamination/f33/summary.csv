@@ -1,0 +1,4 @@
+distance,pairs,contaminated_pairs,clean_pairs,mean_contamination,max_contamination
+D1_same_module,78,72,10,0.12300754863189461,0.8311306901615272
+D2_other_module,916,324,771,0.03587499784623499,0.9375
+D3_other_institution,2912,78,2909,8.155260680165707e-05,0.015037593984962405

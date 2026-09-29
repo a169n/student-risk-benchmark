@@ -28,6 +28,8 @@ Oviedo needs an extraction step. Budget an afternoon the first time.
   wants twelve files, named `<year>_course_content.xlsx`,
   `<year>_course_participation.xlsx`, `<year>_df_contribution.xlsx` and
   `<year>_df_consumption.xlsx` for years 1819, 1920 and 2021.
+  The cache builder (`src.benchmarks.build_caches`) also needs the three
+  `<year>_log_activity.csv` files from the same archive.
 - Verify you have the same bytes the paper's numbers came from:
 
       shasum -a 256 dataset_full.zip

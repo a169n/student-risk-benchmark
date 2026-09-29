@@ -1,7 +1,7 @@
 # Student-Risk Benchmark
 
-63 student cohorts from five universities, five learning-management platforms and
-four countries, harmonised to one seven-feature schema — 35,529 distinct students.
+63 student cohorts from five universities, three learning-management platforms and
+five countries, harmonised to one seven-feature schema — 35,529 distinct students.
 This repository is the artifact behind the paper in [`paper/`](paper/): the
 adapters that build the benchmark, the experiment code, the frozen results and a
 script that recomputes every number the paper states.
@@ -35,10 +35,19 @@ published openly by the institutions that produced them, four under a DOI.
 and the expected local path for each. Budget an afternoon: two archives are
 hundreds of megabytes and Oviedo needs an extraction step.
 
-**2. Run the experiments.** The runners live in `services/ml/src/experiments/`.
-Each writes into `data/artifacts/experiments/<experiment>/`.
+**2. Build the caches.** The runners read weekly frames from parquet caches
+that are not in git. Rebuild them from the downloads (about 15 minutes):
 
-**3. Check the numbers.**
+    cd services/ml && uv run python -m src.benchmarks.build_caches
+
+**3. Run the experiments.** The runners live in `services/ml/src/experiments/`.
+Each writes into `data/artifacts/experiments/<experiment>/`. Then compute the
+intervals on the explanation-agreement numbers, which the figures and
+`verify_paper_claims.py` read:
+
+    uv run python scripts/estimator_intervals.py
+
+**4. Check the numbers.**
 
     cd services/ml && uv run python scripts/verify_paper_claims.py
 
@@ -47,12 +56,10 @@ manuscript states that value. `ABSENT` means the value is not written down, whic
 is often deliberate; a value stated differently in the text is the error this
 catches.
 
-### Status of the frozen results
-
-Regeneration is in progress. Present: `exp_021_trivial_baseline` in full;
-`exp_014`, `exp_023` and `exp_024` carry run metadata only. Absent:
-`exp_015` through `exp_019` and `exp_022`. Until those are restored,
-`verify_paper_claims.py` cannot complete.
+The frozen results for every experiment the paper cites, `exp_014` through
+`exp_024`, are committed, so step 4 runs without steps 1–3. Against the
+camera-ready `paper/main.tex` it reports every recomputed value the paper states
+as `PASS`.
 
 ## Building the paper
 
@@ -62,10 +69,13 @@ Uses the standard IEEE conference class, which ships with TeX Live, MiKTeX and
 Overleaf, so no template file needs downloading. `tectonic -X compile main.tex`
 also works.
 
-The figure file names and the figure numbers disagree: `fig2_cohort_spread.pdf`
-is Figure 1 because it was added later and lands earlier in the text. LaTeX
-numbers by position, so the labels `fig:spread` and `fig:instability` are the
-reliable handles.
+The figure file names and the figure numbers disagree because figures were
+added later and land earlier in the text: `fig0_pipeline.pdf` is Fig. 1,
+`fig2_cohort_spread.pdf` is Fig. 2 and `fig1_explanation_instability.pdf` is
+Fig. 3. LaTeX numbers by position, so the labels `fig:pipeline`, `fig:spread`
+and `fig:instability` are the reliable handles. The scripts that draw them,
+`plot_pipeline.py`, `plot_cohort_spread.py` and `plot_explanation_instability.py`,
+write into `paper/figures/`.
 
 ## Licence
 

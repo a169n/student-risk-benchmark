@@ -238,6 +238,10 @@ def main() -> None:
         summary=summary,
         by_institution=by_institution,
         estimator_health=health,
+        # Per-cohort rows behind estimator_health: a reviewer asked for intervals
+        # on the cost-of-one-year difference, which needs each cohort's own
+        # self-agreement, not the mean.
+        estimator_health_by_cohort=pd.DataFrame(health_rows),
     )
     print("\n=== agreement BETWEEN explanation methods, same model, same data ===")
     print(summary.round(3).to_string(index=False))

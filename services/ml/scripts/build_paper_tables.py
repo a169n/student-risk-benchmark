@@ -3,7 +3,7 @@
 Usage (from services/ml):
     uv run python scripts/build_paper_tables.py --run f33
 
-Writes markdown to docs/dissertation/side2026_tables.md and prints it.
+Writes markdown to paper/tables.md and prints it.
 
 Design note on the aggregation: mean AUC per distance class is NOT comparable
 across classes, because each class is a mean over a different set of target
@@ -24,7 +24,7 @@ import pandas as pd
 REPO = Path(__file__).resolve().parents[3]
 EXP14 = REPO / "data" / "artifacts" / "experiments" / "exp_014_transfer_ladder"
 EXP15 = REPO / "data" / "artifacts" / "experiments" / "exp_015_feature_richness"
-OUT = REPO / "docs" / "dissertation" / "side2026_tables.md"
+OUT = REPO / "paper" / "tables.md"
 
 DIST = ["D0_within_cohort", "D1_same_module", "D2_other_module", "D3_other_institution"]
 DIST_SHORT = {

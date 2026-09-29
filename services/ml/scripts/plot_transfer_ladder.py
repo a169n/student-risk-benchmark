@@ -2,7 +2,7 @@
 
 Usage (from services/ml):
     uv run python scripts/plot_transfer_ladder.py --run f33
-Writes PNG + SVG into docs/dissertation/figures/side2026/.
+Writes PNG + SVG into paper/figures/.
 
 All ladder figures are computed from ``pairs.csv`` with the SAME pairing rule as
 the paper tables: aggregate per target cohort, then keep only targets present at
@@ -24,7 +24,7 @@ import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[3]
-FIG = REPO / "docs" / "dissertation" / "figures" / "side2026"
+FIG = REPO / "paper" / "figures"
 
 DIST = ["D0_within_cohort", "D1_same_module", "D2_other_module", "D3_other_institution"]
 DIST_LABEL = [

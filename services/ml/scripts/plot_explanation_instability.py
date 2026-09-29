@@ -24,7 +24,7 @@ import pandas as pd  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[3]
 ART = REPO / "data" / "artifacts" / "experiments"
-FIG = REPO / "docs" / "dissertation" / "figures" / "side2026"
+FIG = REPO / "paper" / "figures"
 
 # Colour encodes WHAT was changed between the two rankings being compared.
 FAMILY = {
@@ -78,12 +78,12 @@ def collect() -> pd.DataFrame:
 
     rows = [
         (
-            "Same model, only the random seed differs",
+            "Noise floor: same model, only the seed differs",
             ceiling.loc["floor (same model, reseeded)", "tau"],
             "reference",
         ),
         (
-            "Two models, halves of one cohort",
+            "Ceiling: two models, halves of one cohort",
             ceiling.loc["ceiling, ladder-matched evaluation set", "tau"],
             "sample",
         ),
@@ -97,26 +97,58 @@ def collect() -> pd.DataFrame:
         ("SHAP vs drop-column *", explainer.loc["drop_column vs shap", "tau"], "explainer"),
         ("Another course, same institution", rung("D2_other_module"), "institution"),
         ("Another institution", rung("D3_other_institution"), "institution"),
-        ("Two independent random rankings", 0.0, "reference"),
     ]
-    return pd.DataFrame(rows, columns=["label", "tau", "family"]).sort_values("tau")
+    frame = pd.DataFrame(rows, columns=["label", "tau", "family"])
+    # 95 % cluster-bootstrap intervals, written by scripts/estimator_intervals.py.
+    ci = pd.read_csv(ART / "exp_024_estimator_conditional" / "f33" / "intervals.csv").set_index("label")
+    key = {
+        "Noise floor: same model, only the seed differs": "floor: same model, reseeded",
+        "Ceiling: two models, halves of one cohort": "ceiling: disjoint halves, ladder-matched",
+        "Permutation vs SHAP": "explainer: permutation vs shap",
+        "Permutation vs drop-column *": "explainer: drop_column vs permutation",
+        "SHAP vs drop-column *": "explainer: drop_column vs shap",
+        "Same course, next year's students": "D1: same course, next year",
+        "Another course, same institution": "D2: another course, same institution",
+        "Another institution": "D3: another institution",
+    }
+    frame["lo"] = [ci.loc[key[l], "ci_low"] if l in key else np.nan for l in frame.label]
+    frame["hi"] = [ci.loc[key[l], "ci_high"] if l in key else np.nan for l in frame.label]
+    return frame.sort_values("tau")
 
 
 def main() -> None:
     d = collect()
     FIG.mkdir(parents=True, exist_ok=True)
-    fig, ax = plt.subplots(figsize=(6.6, 3.2), dpi=220)
+    fig, ax = plt.subplots(figsize=(7.0, 2.6), dpi=220)
 
     ys = np.arange(len(d))
     ax.barh(ys, d["tau"], height=0.62, color=[FAMILY[f] for f in d["family"]])
-    for y, (tau, family) in enumerate(zip(d["tau"], d["family"])):
-        ax.text(tau + 0.012, y, f"{tau:.3f}", va="center", fontsize=8, color=FAMILY[family])
+    has = d["lo"].notna()
+    ax.errorbar(
+        d.loc[has, "tau"], ys[has.to_numpy()],
+        xerr=[d.loc[has, "tau"] - d.loc[has, "lo"], d.loc[has, "hi"] - d.loc[has, "tau"]],
+        fmt="none", ecolor="#222222", elinewidth=0.8, capsize=2,
+    )
+    for y, (tau, hi, family) in enumerate(zip(d["tau"], d["hi"], d["family"])):
+        x = (hi if not np.isnan(hi) else tau) + 0.012
+        ax.text(x, y, f"{tau:.3f}", va="center", fontsize=9, color=FAMILY[family])
 
     ax.set_yticks(ys)
-    ax.set_yticklabels(d["label"], fontsize=8)
-    ax.set_xlabel("agreement between the two feature rankings (Kendall tau)", fontsize=8.5)
+    ax.set_yticklabels(d["label"], fontsize=9)
+    ax.set_xlabel("agreement between the two feature rankings (Kendall τ), 95 % cluster-bootstrap interval", fontsize=9)
+    ax.tick_params(axis="x", labelsize=8.5)
     ax.set_xlim(0, 0.82)
     ax.axvline(0.0, color="#c8c8c8", lw=0.8)
+    # Dotted guides at the two permutation-scale bounds, so a bar's position
+    # relative to the floor and the ceiling can be read without the caption.
+    ref = d.set_index("label")["tau"]
+    for label, name in (
+        ("Noise floor: same model, only the seed differs", "floor"),
+        ("Ceiling: two models, halves of one cohort", "ceiling"),
+    ):
+        ax.axvline(ref[label], color="#8a8a8a", lw=0.7, ls=":")
+        ax.text(ref[label] + 0.005, len(d) - 0.35, name, fontsize=8, color="#6a6a6a", va="bottom")
+    ax.set_ylim(-0.6, len(d) - 0.2)
 
     handles = [
         plt.Rectangle((0, 0), 1, 1, color=FAMILY[k])
@@ -126,7 +158,7 @@ def main() -> None:
         handles,
         [LABEL[k] for k in ("explainer", "sample", "institution", "reference")],
         frameon=False,
-        fontsize=7.5,
+        fontsize=8.5,
         loc="lower right",
     )
     fig.tight_layout()

@@ -141,23 +141,50 @@ def build_claims() -> list[tuple[str, float]]:
             (f"{est}: self-agreement, same cohort", float(health.loc[est, "self_agreement_tau"])),
             (f"{est}: dead features of 7", float(health.loc[est, "dead_features"])),
             (f"{est}: agreement between years", float(cond.loc[est, "tau"])),
-            (
-                f"{est}: cost of one year",
-                float(health.loc[est, "self_agreement_tau"] - cond.loc[est, "tau"]),
-            ),
         ]
     reliable = ["shap", "permutation"]
     claims += [
         ("estimator spread between years", float(cond.loc[reliable, "tau"].max()
                                                  - cond.loc[reliable, "tau"].min())),
-        (
-            "mean cost of one year, reliable estimators",
-            float(
-                sum(health.loc[e, "self_agreement_tau"] - cond.loc[e, "tau"] for e in reliable) / 2
-            ),
-        ),
         ("course-year pairs in Table II", float(cond.loc["shap", "observations"] / 3)),
     ]
+    # Intervals, and the cost of one year on matched cohorts (scripts/estimator_intervals.py).
+    # The first submission differenced a 63-cohort self-agreement from a 78-pair
+    # level; the cost is now referenced to the cohorts of those pairs.
+    intervals = pd.read_csv(ART / "exp_024_estimator_conditional" / "f33" / "intervals.csv")
+    for _, row in intervals.iterrows():
+        claims += [
+            (row["label"], float(row["tau"])),
+            (f"{row['label']}: ci low", float(row["ci_low"])),
+            (f"{row['label']}: ci high", float(row["ci_high"])),
+        ]
+        if not pd.isna(row["p_value"]):
+            claims.append((f"{row['label']}: p", float(row["p_value"])))
+    by_label = intervals.set_index("label")["tau"]
+    effect = (by_label["shap: cost of one year"] + by_label["permutation: cost of one year"]) / 2
+    claims += [
+        ("mean cost of one year, matched cohorts", float(effect)),
+        ("level spread over mean cost", float(by_label["spread: shap minus permutation, next year"] / effect)),
+    ]
+
+    # Robustness table: three model families per institution, and clean cross-institution transfer.
+    overlap = pd.read_csv(ART / "exp_017_contamination" / "f33" / "pair_overlap.csv")
+    for model, name in (
+        ("gradient_boosting", "GBM"),
+        ("logistic_regression", "LR"),
+        ("random_forest", "RF"),
+    ):
+        m = pairs[(pairs.model == model) & (pairs.representation == "raw")]
+        d0m = m[m.distance == "D0_within_cohort"].merge(cohorts, left_on="target", right_on="cohort_id")
+        claims.append((f"D0 AUC all cohorts {name}", float(d0m["auc"].mean())))
+        for institution, group in d0m.groupby("institution"):
+            claims.append((f"D0 AUC {institution} {name}", float(group["auc"].mean())))
+        d3m = m[m.distance == "D3_other_institution"].merge(
+            overlap[["source", "target", "is_clean"]], on=["source", "target"], how="left"
+        )
+        claims.append((f"D3 AUC clean pairs {name}", float(d3m.loc[d3m["is_clean"].astype(bool), "auc"].mean())))
+    for institution, group in trivial.groupby("institution"):
+        claims.append((f"rule AUC {institution}", float(group["rule_days_auc"].mean())))
 
     spread = pd.read_csv(ART / "exp_023_cohort_intervals" / "f33" / "cohort_auc.csv")
     grand = spread["auc"].mean()

@@ -9,7 +9,8 @@ al. 2024) to the public-benchmark transfer setting.
 
 Rankings are passed as ordered lists of feature names, best (most important)
 first. kendall_tau uses tau-b over the features shared by both rankings;
-jaccard_topk measures top-k membership overlap.
+jaccard_topk measures top-k membership overlap. kendall_tau_scores takes the
+importance scores themselves, for estimators whose scores can tie exactly.
 """
 
 from __future__ import annotations
@@ -45,6 +46,23 @@ def kendall_tau(ranking_a: Sequence[str], ranking_b: Sequence[str]) -> float | N
     if tau != tau:  # NaN guard (e.g. constant input)
         return None
     return tau
+
+
+def kendall_tau_scores(scores_a: Sequence[float], scores_b: Sequence[float]) -> float | None:
+    """Kendall tau-b between two score vectors over the same features, ties kept.
+
+    kendall_tau reads list positions as strict ranks, so any tie in the scores
+    behind a ranking has already been broken by whatever produced the order —
+    for an argsort, feature index. Global importances rarely tie, but a local
+    perturbation attribution often does: moving a feature to a reference value
+    that crosses no tree split changes nothing, and several such features give
+    identical (zero) scores. Agreement between position lists then partly
+    measures that arbitrary order. tau-b on the scores counts a tied pair as
+    neither concordant nor discordant and shrinks the denominator to match.
+    None when either vector is constant: there is no ranking to compare.
+    """
+    tau = float(kendalltau(scores_a, scores_b, variant="b")[0])
+    return None if tau != tau else tau  # NaN guard, as in kendall_tau
 
 
 def stability_report(
